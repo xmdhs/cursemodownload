@@ -14,6 +14,7 @@ func main() {
 	r.HandleFunc("/curseforge", web.Index)
 	r.HandleFunc("/curseforge/s", web.WebRoot)
 	r.HandleFunc("/curseforge/info", web.Info)
+	r.HandleFunc("/curseforge/download", web.Getdownloadlink)
 	s := http.Server{
 		Addr:         ":8082",
 		ReadTimeout:  5 * time.Second,

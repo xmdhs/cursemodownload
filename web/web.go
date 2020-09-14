@@ -90,20 +90,33 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		title = c.Name
 		r = make([]resultslist, 0, len(c.GameVersionLatestFiles))
 		for _, v := range c.GameVersionLatestFiles {
-			link, err := curseapi.FileId2downloadlink(v.ProjectFileName, strconv.Itoa(v.ProjectFileId))
-			if err != nil {
-				e(w, err)
-				return
-			}
-			cdn := `http://cors.xmdhs.top/` + link
+			link := `./download?id=` + strconv.Itoa(v.ProjectFileId)
 			temp := resultslist{
 				Title: v.ProjectFileName + "  " + v.GameVersion,
 				Link:  link,
-				Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a>`),
+				Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + link + "&cdn=1" + `" target="_blank">镜像下载</a>`),
 			}
 			r = append(r, temp)
 		}
 	}
 
 	pase(w, r, title, "", "")
+}
+
+func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
+	q := req.URL.Query()
+	if len(q["id"]) == 0 {
+		e(w, errors.New(`""`))
+		return
+	}
+	id := q["id"][0]
+	link, err := curseapi.FileId2downloadlink(id)
+	if err != nil {
+		e(w, err)
+		return
+	}
+	if len(q["cdn"]) != 0 {
+		link = `https://cors.xmdhs.top/` + link
+	}
+	http.Redirect(w, req, link, 302)
 }
