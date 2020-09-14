@@ -15,7 +15,7 @@ const (
 	<body>
 		<div class="container-lg px-3 my-5 markdown-body">
 			<h1>curseforge mod 下载</h1>
-			<form action="/s" target="_blank"><input type="text" name="q"></form><br>
+			<form action="/curseforge/s" target="_blank"><input type="text" name="q"></form><br>
 			<hr>
 			<details>
     			<summary>说明</summary>

@@ -8,10 +8,10 @@ import (
 type Modinfo struct {
 	Name                   string             `json:"name"`
 	ID                     int                `json:"id"`
-	GameVersionLatestFiles []gameVersionFiles `json:"gameVersionLatestFiles"`
+	GameVersionLatestFiles []GameVersionFiles `json:"gameVersionLatestFiles"`
 }
 
-type gameVersionFiles struct {
+type GameVersionFiles struct {
 	GameVersion     string `json:"gameVersion"`
 	ProjectFileId   int    `json:"projectFileId"`
 	ProjectFileName string `json:"projectFileName"`
