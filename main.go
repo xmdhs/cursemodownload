@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/pkg/browser"
 	"github.com/xmdhs/cursemodownload/web"
 )
 
@@ -19,5 +20,6 @@ func main() {
 		WriteTimeout: 20 * time.Second,
 		Handler:      r,
 	}
+	browser.OpenURL("http://127.0.0.1:8082")
 	log.Println(s.ListenAndServe())
 }
