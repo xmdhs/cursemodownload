@@ -87,14 +87,14 @@ func Info(w http.ResponseWriter, req *http.Request) {
 	}
 	var r []resultslist
 	var title string
-	for i, v := range c {
+	for _, v := range c {
 		if strconv.Itoa(v.ID) == id {
 			title = v.Name
 			r = make([]resultslist, len(v.GameVersionLatestFiles))
 			var s sync.Mutex
 			errch := make(chan error, 10)
 			var wait sync.WaitGroup
-			for _, v := range v.GameVersionLatestFiles {
+			for i, v := range v.GameVersionLatestFiles {
 				wait.Add(1)
 				go fileID2downloadlink(v, i, r, &s, errch, &wait)
 			}
