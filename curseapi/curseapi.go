@@ -20,11 +20,8 @@ func Searchmod(key string, index string) ([]Modinfo, error) {
 	return m, nil
 }
 
-func FileId2downloadlink(id string) (string, error) {
-	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/0/file/` + id + `/download-url`
-	b, err := httpget(aurl)
-	if err != nil {
-		return "", fmt.Errorf("FileId2downloadlink: %w", err)
-	}
-	return string(b), nil
+func FileId2downloadlink(filename, id string) (string, error) {
+	return `https://edge.forgecdn.net/files/` + id[:4] + "/" + id[4:] + "/" + filename, nil
 }
+
+//https://media.forgecdn.net/files/3046/220/jei-1.16.2-7.3.2.25.jar

@@ -6,7 +6,6 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
-	"sync"
 
 	"github.com/xmdhs/cursemodownload/curseapi"
 )
@@ -90,46 +89,22 @@ func Info(w http.ResponseWriter, req *http.Request) {
 	for _, v := range c {
 		if strconv.Itoa(v.ID) == id {
 			title = v.Name
-			r = make([]resultslist, len(v.GameVersionLatestFiles))
-			var s sync.Mutex
-			errch := make(chan error, 10)
-			var wait sync.WaitGroup
-			for i, v := range v.GameVersionLatestFiles {
-				wait.Add(1)
-				go fileID2downloadlink(v, i, r, &s, errch, &wait)
+			r = make([]resultslist, 0, len(v.GameVersionLatestFiles))
+			for _, v := range v.GameVersionLatestFiles {
+				link, err := curseapi.FileId2downloadlink(v.ProjectFileName, strconv.Itoa(v.ProjectFileId))
+				if err != nil {
+					e(w, err)
+					return
+				}
+				cdn := `http://cors.xmdhs.top/` + link
+				temp := resultslist{
+					Title: v.ProjectFileName + "  " + v.GameVersion,
+					Link:  link,
+					Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a>`),
+				}
+				r = append(r, temp)
 			}
-			tempch := make(chan struct{})
-			go func() {
-				wait.Wait()
-				tempch <- struct{}{}
-			}()
-			select {
-			case <-tempch:
-				break
-			case err := <-errch:
-				e(w, err)
-				return
-			}
-			break
 		}
 	}
 	pase(w, r, title, "", "")
-}
-
-func fileID2downloadlink(v curseapi.GameVersionFiles, i int, r []resultslist, s *sync.Mutex, errch chan error, w *sync.WaitGroup) {
-	link, err := curseapi.FileId2downloadlink(strconv.Itoa(v.ProjectFileId))
-	if err != nil {
-		errch <- err
-		return
-	}
-	cdn := `http://cors.xmdhs.top/` + link
-	temp := resultslist{
-		Title: v.ProjectFileName + "  " + v.GameVersion,
-		Link:  link,
-		Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a>`),
-	}
-	s.Lock()
-	r[i] = temp
-	s.Unlock()
-	w.Done()
 }
