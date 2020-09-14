@@ -1,6 +1,7 @@
 package curseapi
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 )
@@ -25,3 +26,17 @@ func FileId2downloadlink(filename, id string) (string, error) {
 }
 
 //https://media.forgecdn.net/files/3046/220/jei-1.16.2-7.3.2.25.jar
+
+func AddonInfo(addonID string) (Modinfo, error) {
+	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/` + addonID
+	b, err := httpget(aurl)
+	if err != nil {
+		return Modinfo{}, fmt.Errorf("AddonInfo: %w", err)
+	}
+	m := Modinfo{}
+	err = json.Unmarshal(b, &m)
+	if err != nil {
+		return Modinfo{}, fmt.Errorf("AddonInfo: %w", err)
+	}
+	return m, nil
+}

@@ -65,7 +65,7 @@ func search(txt, offset string) ([]resultslist, error) {
 	for _, v := range c {
 		temp := resultslist{
 			Title: v.Name,
-			Link:  fmt.Sprintf("./info?id=%v&key=%v&offset=%v", v.ID, txt, offset),
+			Link:  fmt.Sprintf("./info?id=%v", v.ID),
 		}
 		r = append(r, temp)
 	}
@@ -74,37 +74,36 @@ func search(txt, offset string) ([]resultslist, error) {
 
 func Info(w http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
-	if len(q["id"]) == 0 || len(q["key"]) == 0 || len(q["offset"]) == 0 {
+	if len(q["id"]) == 0 {
 		e(w, errors.New(`""`))
 		return
 	}
-	id, txt, offset := q["id"][0], q["key"][0], q["offset"][0]
-	c, err := curseapi.Searchmod(txt, offset)
+	id := q["id"][0]
+	c, err := curseapi.AddonInfo(id)
 	if err != nil {
 		e(w, err)
 		return
 	}
 	var r []resultslist
 	var title string
-	for _, v := range c {
-		if strconv.Itoa(v.ID) == id {
-			title = v.Name
-			r = make([]resultslist, 0, len(v.GameVersionLatestFiles))
-			for _, v := range v.GameVersionLatestFiles {
-				link, err := curseapi.FileId2downloadlink(v.ProjectFileName, strconv.Itoa(v.ProjectFileId))
-				if err != nil {
-					e(w, err)
-					return
-				}
-				cdn := `http://cors.xmdhs.top/` + link
-				temp := resultslist{
-					Title: v.ProjectFileName + "  " + v.GameVersion,
-					Link:  link,
-					Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a>`),
-				}
-				r = append(r, temp)
+	if strconv.Itoa(c.ID) == id {
+		title = c.Name
+		r = make([]resultslist, 0, len(c.GameVersionLatestFiles))
+		for _, v := range c.GameVersionLatestFiles {
+			link, err := curseapi.FileId2downloadlink(v.ProjectFileName, strconv.Itoa(v.ProjectFileId))
+			if err != nil {
+				e(w, err)
+				return
 			}
+			cdn := `http://cors.xmdhs.top/` + link
+			temp := resultslist{
+				Title: v.ProjectFileName + "  " + v.GameVersion,
+				Link:  link,
+				Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a>`),
+			}
+			r = append(r, temp)
 		}
 	}
+
 	pase(w, r, title, "", "")
 }
