@@ -19,6 +19,9 @@ func Searchmod(key string, index string) ([]Modinfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Searchmod: %w", err)
 	}
+	sort.Slice(m, func(i, j int) bool {
+		return m[i].ID > m[j].ID
+	})
 	return m, nil
 }
 
