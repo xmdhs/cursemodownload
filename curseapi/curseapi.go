@@ -19,9 +19,6 @@ func Searchmod(key string, index string) ([]Modinfo, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Searchmod: %w", err)
 	}
-	sort.Slice(m, func(i, j int) bool {
-		return m[i].ID > m[j].ID
-	})
 	return m, nil
 }
 
@@ -47,6 +44,9 @@ func AddonInfo(addonID string) (Modinfo, error) {
 	if err != nil {
 		return Modinfo{}, fmt.Errorf("AddonInfo: %w", err)
 	}
+	sort.Slice(m.GameVersionLatestFiles, func(i, j int) bool {
+		return m.GameVersionLatestFiles[i].ProjectFileId > m.GameVersionLatestFiles[j].ProjectFileId
+	})
 	return m, nil
 }
 
