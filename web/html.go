@@ -47,10 +47,12 @@ const (
 	
 	</html>`
 	body = `{{define "body"}}
-	<h1>{{.Name}}</h1>{{range .List}}<h3><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
+	{{if .WebsiteURL}}<h1><a href="{{ .WebsiteURL}}" target="_blank">{{.Name}}</a></h1>{{else}}
+	<h1>{{.Name}}</h1>{{end}}
+	{{range .List}}<h3><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
 	<blockquote>
 		<p>{{ .Txt}}</p>
 	</blockquote>{{end}} {{if .T}}<br>
 	<hr>
-	<p><a href="{{ .Link}}">more</a></p>{{else}} {{end}}{{end}}`
+	<p><a href="{{ .Link}}">more</a></p>{{else}}{{end}}{{end}}`
 )

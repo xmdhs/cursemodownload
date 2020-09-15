@@ -46,7 +46,7 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	}
 	i++
 	page = strconv.FormatInt(i, 10)
-	pase(w, r, query, page, "./s?q=")
+	pase(w, r, query, page, "./s?q=", "")
 }
 
 func e(w http.ResponseWriter, err error) {
@@ -67,6 +67,7 @@ func search(txt, offset string) ([]resultslist, error) {
 		temp := resultslist{
 			Title: v.Name,
 			Link:  fmt.Sprintf("./info?id=%v", v.ID),
+			Txt:   template.HTML(v.Summary),
 		}
 		r = append(r, temp)
 	}
@@ -101,7 +102,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	pase(w, r, title, "", "")
+	pase(w, r, title, "", "", c.WebsiteUrl)
 }
 
 func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
@@ -152,7 +153,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 			Txt:   template.HTML(`<p><a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a></p>` + dependenciespase(v.Dependencies)),
 		})
 	}
-	pase(w, r, id+" "+ver, "", "")
+	pase(w, r, id+" "+ver, "", "", "")
 }
 
 func releaseType(Type int) string {

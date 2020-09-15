@@ -7,10 +7,11 @@ import (
 )
 
 type results struct {
-	Name string
-	List []resultslist
-	Link string
-	T    bool
+	Name       string
+	List       []resultslist
+	Link       string
+	T          bool
+	WebsiteURL string
 }
 
 type resultslist struct {
@@ -19,7 +20,7 @@ type resultslist struct {
 	Txt   template.HTML
 }
 
-func pase(w io.Writer, list []resultslist, Name, page, link string) {
+func pase(w io.Writer, list []resultslist, Name, page, link, titilelink string) {
 	T := true
 	Link := ""
 	if len(list) != 20 || page == "" {
@@ -28,10 +29,11 @@ func pase(w io.Writer, list []resultslist, Name, page, link string) {
 		Link = link + Name + "&page=" + page
 	}
 	r := results{
-		Name: Name,
-		Link: Link,
-		List: list,
-		T:    T,
+		Name:       Name,
+		Link:       Link,
+		List:       list,
+		WebsiteURL: titilelink,
+		T:          T,
 	}
 	err := t.ExecuteTemplate(w, "page", r)
 	if err != nil {

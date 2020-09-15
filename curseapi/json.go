@@ -9,6 +9,8 @@ type Modinfo struct {
 	Name                   string             `json:"name"`
 	ID                     int                `json:"id"`
 	GameVersionLatestFiles []GameVersionFiles `json:"gameVersionLatestFiles"`
+	WebsiteUrl             string             `json:"websiteUrl"`
+	Summary                string             `json:"summary"`
 }
 
 type GameVersionFiles struct {
