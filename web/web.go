@@ -172,7 +172,7 @@ func dependenciespase(dependencies []curseapi.Dependencies) string {
 	i := 0
 	s.WriteString(`<p>依赖：`)
 	for _, v := range dependencies {
-		if v.AddonId == 3 {
+		if v.Type == 3 {
 			s.WriteString(`<a href="` + dependencies2url(v) + `" target="_blank">` + strconv.Itoa(v.AddonId) + `</a> `)
 			i++
 		}
@@ -185,5 +185,5 @@ func dependenciespase(dependencies []curseapi.Dependencies) string {
 }
 
 func dependencies2url(dependencies curseapi.Dependencies) string {
-	return "./curseforge/info?id=" + strconv.Itoa(dependencies.AddonId)
+	return "./info?id=" + strconv.Itoa(dependencies.AddonId)
 }
