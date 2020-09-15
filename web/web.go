@@ -67,7 +67,7 @@ func search(txt, offset string) ([]resultslist, error) {
 		temp := resultslist{
 			Title: v.Name,
 			Link:  fmt.Sprintf("./info?id=%v", v.ID),
-			Txt:   template.HTML(v.Summary),
+			Txt:   template.HTML(template.HTMLEscapeString(v.Summary)),
 		}
 		r = append(r, temp)
 	}
@@ -94,7 +94,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		for _, v := range c.GameVersionLatestFiles {
 			link := `./download?id=` + strconv.Itoa(v.ProjectFileId)
 			temp := resultslist{
-				Title: v.ProjectFileName + "  " + v.GameVersion,
+				Title: template.HTMLEscapeString(v.ProjectFileName) + "  " + template.HTMLEscapeString(v.GameVersion),
 				Link:  link,
 				Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + link + "&cdn=1" + `" target="_blank">镜像下载</a> <a href="./history?id=` + id + "&ver=" + v.GameVersion + `" target="_blank">历史版本</a>`),
 			}
@@ -150,7 +150,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 		r = append(r, resultslist{
 			Title: v.FileName + " " + releaseType(v.ReleaseType),
 			Link:  v.DownloadUrl,
-			Txt:   template.HTML(`<p><a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a></p>` + dependenciespase(v.Dependencies)),
+			Txt:   template.HTML(`<p><a href="` + template.HTMLEscapeString(link) + `" target="_blank">官方下载</a> <a href="` + template.HTMLEscapeString(cdn) + `" target="_blank">镜像下载</a></p>` + dependenciespase(v.Dependencies)),
 		})
 	}
 	pase(w, r, id+" "+ver, "", "", "")
