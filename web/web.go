@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/xmdhs/cursemodownload/curseapi"
 )
@@ -94,7 +95,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 			temp := resultslist{
 				Title: v.ProjectFileName + "  " + v.GameVersion,
 				Link:  link,
-				Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + link + "&cdn=1" + `" target="_blank">镜像下载</a>`),
+				Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + link + "&cdn=1" + `" target="_blank">镜像下载</a> <a href="./history?id=` + id + "&ver=" + v.GameVersion + `" target="_blank">历史版本</a>`),
 			}
 			r = append(r, temp)
 		}
@@ -119,4 +120,70 @@ func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
 		link = `https://cors.xmdhs.top/` + link
 	}
 	http.Redirect(w, req, link, 302)
+}
+
+func History(w http.ResponseWriter, req *http.Request) {
+	q := req.URL.Query()
+	if len(q["id"]) == 0 || len(q["ver"]) == 0 {
+		e(w, errors.New(`""`))
+		return
+	}
+	id, ver := q["id"][0], q["ver"][0]
+	h, err := curseapi.Addonfiles(id)
+	if err != nil {
+		e(w, err)
+		return
+	}
+	files := make([]curseapi.Files, 0)
+	for _, v := range h {
+		for _, vv := range v.GameVersion {
+			if vv == ver {
+				files = append(files, v)
+			}
+		}
+	}
+	r := make([]resultslist, 0)
+	for _, v := range files {
+		link := v.DownloadUrl
+		cdn := `https://cors.xmdhs.top/` + link
+		r = append(r, resultslist{
+			Title: v.FileName + " " + releaseType(v.ReleaseType),
+			Link:  v.DownloadUrl,
+			Txt:   template.HTML(`<p><a href="` + link + `" target="_blank">官方下载</a> <a href="` + cdn + `" target="_blank">镜像下载</a></p>` + dependenciespase(v.Dependencies)),
+		})
+	}
+	pase(w, r, id+" "+ver, "", "")
+}
+
+func releaseType(Type int) string {
+	switch Type {
+	case 1:
+		return "Release"
+	case 2:
+		return "Beta"
+	case 3:
+		return "Alpha"
+	}
+	return ""
+}
+
+func dependenciespase(dependencies []curseapi.Dependencies) string {
+	s := strings.Builder{}
+	i := 0
+	s.WriteString(`<p>依赖：`)
+	for _, v := range dependencies {
+		if v.AddonId == 3 {
+			s.WriteString(`<a href="` + dependencies2url(v) + `" target="_blank">` + strconv.Itoa(v.AddonId) + `</a> `)
+			i++
+		}
+	}
+	s.WriteString(`</p>`)
+	if i == 0 {
+		return ""
+	}
+	return s.String()
+}
+
+func dependencies2url(dependencies curseapi.Dependencies) string {
+	return "./curseforge/info?id=" + strconv.Itoa(dependencies.AddonId)
 }

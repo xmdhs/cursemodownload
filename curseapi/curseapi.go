@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"sort"
 )
 
-//From https://gist.github.com/crapStone/9a423f7e97e64a301e88a2f6a0f3e4d9#file-curse_api-md
+//From https://gaz492.github.io/TwitchAPI/
 
 func Searchmod(key string, index string) ([]Modinfo, error) {
 	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&sectionId=6&sort=0`
@@ -43,5 +44,22 @@ func AddonInfo(addonID string) (Modinfo, error) {
 	if err != nil {
 		return Modinfo{}, fmt.Errorf("AddonInfo: %w", err)
 	}
+	return m, nil
+}
+
+func Addonfiles(addonID string) ([]Files, error) {
+	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/` + addonID + `/files`
+	b, err := httpget(aurl)
+	if err != nil {
+		return nil, fmt.Errorf("Addonfiles: %w", err)
+	}
+	m := make([]Files, 0)
+	err = json.Unmarshal(b, &m)
+	if err != nil {
+		return nil, fmt.Errorf("Addonfiles: %w", err)
+	}
+	sort.Slice(m, func(i, j int) bool {
+		return m[i].ID > m[j].ID
+	})
 	return m, nil
 }
