@@ -33,14 +33,23 @@ func pase(w io.Writer, list []resultslist, Name, page, link string) {
 		List: list,
 		T:    T,
 	}
-	t, err := template.New("page").Parse(searchhtml)
+	err := t.ExecuteTemplate(w, "page", r)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	err = t.Execute(w, r)
+}
+
+var t *template.Template
+
+func init() {
+	var err error
+	t, err = template.New("page").Parse(searchhtml)
 	if err != nil {
-		log.Println(err)
-		return
+		panic(err)
+	}
+	t, err = t.New("body").Parse(body)
+	if err != nil {
+		panic(err)
 	}
 }

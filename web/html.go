@@ -39,16 +39,18 @@ const (
 	
 	<body>
 		<div class="container-lg px-3 my-5 markdown-body">
-			<h1>{{.Name}}</h1>{{range .List}}<h3><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
-			<blockquote>
-				<p>{{ .Txt}}</p>
-			</blockquote>{{end}} {{if .T}}<br>
-			<hr>
-			<p><a href="{{ .Link}}">more</a></p>{{else}} {{end}}
+		{{template "body" .}}
 		</div>
 		<script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
 		<script>anchors.add();</script>
 	</body>
 	
 	</html>`
+	body = `{{define "body"}}
+	<h1>{{.Name}}</h1>{{range .List}}<h3><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
+	<blockquote>
+		<p>{{ .Txt}}</p>
+	</blockquote>{{end}} {{if .T}}<br>
+	<hr>
+	<p><a href="{{ .Link}}">more</a></p>{{else}} {{end}}{{end}}`
 )
