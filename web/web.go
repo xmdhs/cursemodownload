@@ -148,7 +148,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 		link := v.DownloadUrl
 		cdn := `https://cors.xmdhs.top/` + link
 		r = append(r, resultslist{
-			Title: v.FileName + " " + releaseType(v.ReleaseType),
+			Title: v.FileName + " " + releaseType[v.ReleaseType],
 			Link:  v.DownloadUrl,
 			Txt:   template.HTML(`<p><a href="` + template.HTMLEscapeString(link) + `" target="_blank">官方下载</a> <a href="` + template.HTMLEscapeString(cdn) + `" target="_blank">镜像下载</a></p>` + dependenciespase(v.Dependencies)),
 		})
@@ -156,16 +156,10 @@ func History(w http.ResponseWriter, req *http.Request) {
 	pase(w, r, id+" "+ver, "", "", "")
 }
 
-func releaseType(Type int) string {
-	switch Type {
-	case 1:
-		return "Release"
-	case 2:
-		return "Beta"
-	case 3:
-		return "Alpha"
-	}
-	return ""
+var releaseType = map[int]string{
+	1: "Release",
+	2: "Beta",
+	3: "Alpha",
 }
 
 func dependenciespase(dependencies []curseapi.Dependencies) string {
