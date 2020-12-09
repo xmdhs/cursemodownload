@@ -145,11 +145,10 @@ func History(w http.ResponseWriter, req *http.Request) {
 	}
 	r := make([]resultslist, 0)
 	for _, v := range files {
-		link := v.DownloadUrl
 		r = append(r, resultslist{
 			Title: v.FileName + " " + releaseType[v.ReleaseType],
 			Link:  v.DownloadUrl,
-			Txt:   template.HTML(`<p><a href="` + template.HTMLEscapeString(link) + `" target="_blank">点击下载</a></p>` + dependenciespase(v.Dependencies)),
+			Txt:   template.HTML(dependenciespase(v.Dependencies)),
 		})
 	}
 	pase(w, r, id+" "+ver, "", "", "")
