@@ -88,17 +88,20 @@ func Info(w http.ResponseWriter, req *http.Request) {
 	}
 	var r []resultslist
 	var title string
+	set := make(map[string]struct{})
 	if strconv.Itoa(c.ID) == id {
 		title = c.Name
 		r = make([]resultslist, 0, len(c.GameVersionLatestFiles))
 		for _, v := range c.GameVersionLatestFiles {
-			link := `./download?id=` + strconv.Itoa(v.ProjectFileId)
-			temp := resultslist{
-				Title: template.HTMLEscapeString(v.ProjectFileName) + "  " + template.HTMLEscapeString(v.GameVersion),
-				Link:  link,
-				Txt:   template.HTML(`<a href="` + link + `" target="_blank">官方下载</a> <a href="` + link + "&cdn=1" + `" target="_blank">镜像下载</a> <a href="./history?id=` + id + "&ver=" + v.GameVersion + `" target="_blank">历史版本</a>`),
+			if _, ok := set[v.GameVersion]; !ok {
+				set[v.GameVersion] = struct{}{}
+				link := `./history?id=` + id + "&ver=" + v.GameVersion
+				temp := resultslist{
+					Title: template.HTMLEscapeString(v.GameVersion),
+					Link:  link,
+				}
+				r = append(r, temp)
 			}
-			r = append(r, temp)
 		}
 	}
 
@@ -107,18 +110,15 @@ func Info(w http.ResponseWriter, req *http.Request) {
 
 func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
-	if len(q["id"]) == 0 {
+	id := q.Get("id")
+	if id == "" {
 		e(w, errors.New(`""`))
 		return
 	}
-	id := q["id"][0]
 	link, err := curseapi.FileId2downloadlink(id)
 	if err != nil {
 		e(w, err)
 		return
-	}
-	if len(q["cdn"]) != 0 {
-		link = `https://cors.xmdhs.top/` + link
 	}
 	http.Redirect(w, req, link, 302)
 }
@@ -146,11 +146,10 @@ func History(w http.ResponseWriter, req *http.Request) {
 	r := make([]resultslist, 0)
 	for _, v := range files {
 		link := v.DownloadUrl
-		cdn := `https://cors.xmdhs.top/` + link
 		r = append(r, resultslist{
 			Title: v.FileName + " " + releaseType[v.ReleaseType],
 			Link:  v.DownloadUrl,
-			Txt:   template.HTML(`<p><a href="` + template.HTMLEscapeString(link) + `" target="_blank">官方下载</a> <a href="` + template.HTMLEscapeString(cdn) + `" target="_blank">镜像下载</a></p>` + dependenciespase(v.Dependencies)),
+			Txt:   template.HTML(`<p><a href="` + template.HTMLEscapeString(link) + `" target="_blank">点击下载</a></p>` + dependenciespase(v.Dependencies)),
 		})
 	}
 	pase(w, r, id+" "+ver, "", "", "")
