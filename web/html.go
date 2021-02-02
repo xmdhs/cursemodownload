@@ -10,6 +10,7 @@ const (
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>curseforge mod 下载</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xmdhs/searchqanda/style.css">
+		<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b5191d5d3a534b2c825c364fe714b39e"}'></script>
 	</head>
 	
 	<body>
@@ -35,6 +36,7 @@ const (
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<title>curseforge mod 下载 - {{.Name}}</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xmdhs/searchqanda/style.css">
+		<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b5191d5d3a534b2c825c364fe714b39e"}'></script>
 	</head>
 	
 	<body>
