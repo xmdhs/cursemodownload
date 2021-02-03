@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/golang/groupcache/singleflight"
 )
 
 var c = http.Client{Timeout: 10 * time.Second}
@@ -32,15 +34,23 @@ func httpget(url string) ([]byte, error) {
 
 var acache = newcache()
 
+var s = singleflight.Group{}
+
 func httpcache(url string) ([]byte, error) {
 	b := acache.Load(url)
 	if b != nil {
 		return b, nil
 	}
-	b, err := httpget(url)
+	t, err := s.Do(url, func() (interface{}, error) {
+		b, err := httpget(url)
+		if err != nil {
+			return nil, err
+		}
+		return b, nil
+	})
 	if err != nil {
 		return nil, fmt.Errorf("httpcache: %w", err)
 	}
-	acache.Store(url, b)
+	acache.Store(url, t.([]byte))
 	return b, nil
 }
