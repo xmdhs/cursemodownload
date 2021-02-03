@@ -1,14 +1,10 @@
 package curseapi
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"github.com/golang/groupcache"
 )
 
 var c = http.Client{Timeout: 10 * time.Second}
@@ -34,21 +30,17 @@ func httpget(url string) ([]byte, error) {
 	return b, err
 }
 
+var acache = newcache()
+
 func httpcache(url string) ([]byte, error) {
-	t := time.Now()
-	ti := t.Round(time.Hour).Unix()
-	k := key{
-		URL:  url,
-		Time: ti,
+	b := acache.Load(url)
+	if b != nil {
+		return b, nil
 	}
-	b, err := json.Marshal(k)
+	b, err := httpget(url)
 	if err != nil {
 		return nil, fmt.Errorf("httpcache: %w", err)
 	}
-	bb := make([]byte, 0)
-	err = cache.Get(context.TODO(), string(b), groupcache.AllocatingByteSliceSink(&bb))
-	if err != nil {
-		return nil, fmt.Errorf("httpcache: %w", err)
-	}
-	return bb, nil
+	acache.Store(url, b)
+	return b, nil
 }
