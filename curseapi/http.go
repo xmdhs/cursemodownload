@@ -51,6 +51,7 @@ func httpcache(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("httpcache: %w", err)
 	}
-	acache.Store(url, t.([]byte))
+	b = t.([]byte)
+	acache.Store(url, b)
 	return b, nil
 }
