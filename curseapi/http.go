@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/allegro/bigcache/v3"
 	"github.com/golang/groupcache/singleflight"
 )
 
@@ -32,13 +33,21 @@ func httpget(url string) ([]byte, error) {
 	return b, err
 }
 
-var acache = newcache()
+var acache *bigcache.BigCache
+
+func init() {
+	var err error
+	acache, err = bigcache.NewBigCache(bigcache.DefaultConfig(30 * time.Minute))
+	if err != nil {
+		panic(err)
+	}
+}
 
 var s = singleflight.Group{}
 
 func httpcache(url string) ([]byte, error) {
-	b := acache.Load(url)
-	if b != nil {
+	b, err := acache.Get(url)
+	if err == nil {
 		return b, nil
 	}
 	t, err := s.Do(url, func() (interface{}, error) {
@@ -52,6 +61,6 @@ func httpcache(url string) ([]byte, error) {
 		return nil, fmt.Errorf("httpcache: %w", err)
 	}
 	b = t.([]byte)
-	acache.Store(url, b)
+	acache.Set(url, b)
 	return b, nil
 }
