@@ -1,7 +1,9 @@
 package curseapi
 
 import (
+	"compress/gzip"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -18,6 +20,7 @@ func httpget(url string) ([]byte, error) {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
 	reqs.Header.Set("Accept", "*/*")
+	reqs.Header.Set("Accept-Encoding", "gzip")
 	reqs.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36")
 	rep, err := c.Do(reqs)
 	if rep != nil {
@@ -26,7 +29,18 @@ func httpget(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
-	b, err := ioutil.ReadAll(rep.Body)
+	var reader io.ReadCloser
+	switch reqs.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err = gzip.NewReader(reqs.Body)
+		if err != nil {
+			return nil, fmt.Errorf("httpget: %w", err)
+		}
+		defer reader.Close()
+	default:
+		reader = reqs.Body
+	}
+	b, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
