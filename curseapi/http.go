@@ -30,15 +30,15 @@ func httpget(url string) ([]byte, error) {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
 	var reader io.ReadCloser
-	switch reqs.Header.Get("Content-Encoding") {
+	switch rep.Header.Get("Content-Encoding") {
 	case "gzip":
-		reader, err = gzip.NewReader(reqs.Body)
+		reader, err = gzip.NewReader(rep.Body)
 		if err != nil {
 			return nil, fmt.Errorf("httpget: %w", err)
 		}
 		defer reader.Close()
 	default:
-		reader = reqs.Body
+		reader = rep.Body
 	}
 	b, err := ioutil.ReadAll(reader)
 	if err != nil {
