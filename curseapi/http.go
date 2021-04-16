@@ -51,8 +51,8 @@ var acache *bigcache.BigCache
 
 func init() {
 	var err error
-	c := bigcache.DefaultConfig(30 * time.Minute)
-	c.HardMaxCacheSize = 50
+	c := bigcache.DefaultConfig(10 * time.Minute)
+	c.HardMaxCacheSize = 10
 	acache, err = bigcache.NewBigCache(c)
 	if err != nil {
 		panic(err)
