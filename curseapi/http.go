@@ -7,6 +7,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/allegro/bigcache/v3"
+	"golang.org/x/sync/singleflight"
 )
 
 var c = http.Client{Timeout: 10 * time.Second}
@@ -44,13 +47,14 @@ func httpget(url string) ([]byte, error) {
 	return b, err
 }
 
-/*
 var acache *bigcache.BigCache
 
 func init() {
 	var err error
 	c := bigcache.DefaultConfig(10 * time.Minute)
-	c.HardMaxCacheSize = 10
+	c.HardMaxCacheSize = 20
+	c.MaxEntrySize = 100000
+	c.MaxEntriesInWindow = 500
 	acache, err = bigcache.NewBigCache(c)
 	if err != nil {
 		panic(err)
@@ -58,28 +62,23 @@ func init() {
 }
 
 var s = singleflight.Group{}
-*/
 
 func httpcache(url string) ([]byte, error) {
-	/*b, err := acache.Get(url)
+	b, err := acache.Get(url)
 	if err == nil {
 		return b, nil
 	}
-	t, err := s.Do(url, func() (interface{}, error) {
+	t, err, _ := s.Do(url, func() (interface{}, error) {
 		b, err := httpget(url)
 		if err != nil {
 			return nil, err
 		}
+		acache.Set(url, b)
 		return b, nil
 	})
 	if err != nil {
 		return nil, fmt.Errorf("httpcache: %w", err)
 	}
 	b = t.([]byte)
-	acache.Set(url, b)*/
-	b, err := httpget(url)
-	if err != nil {
-		return nil, err
-	}
 	return b, nil
 }
