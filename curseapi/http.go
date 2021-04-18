@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/coocood/freecache"
+	"github.com/allegro/bigcache/v3"
 	"golang.org/x/sync/singleflight"
 )
 
@@ -47,11 +47,14 @@ func httpget(url string) ([]byte, error) {
 	return b, err
 }
 
-var acache *freecache.Cache
+var acache *bigcache.BigCache
 
 func init() {
 	var err error
-	acache = freecache.NewCache(50 * 1024 * 1024)
+	c := bigcache.DefaultConfig(10 * time.Minute)
+	c.HardMaxCacheSize = 50
+	c.MaxEntriesInWindow = 1000 * 10
+	acache, err = bigcache.NewBigCache(c)
 	if err != nil {
 		panic(err)
 	}
@@ -60,7 +63,7 @@ func init() {
 var s = singleflight.Group{}
 
 func httpcache(url string) ([]byte, error) {
-	b, err := acache.Get([]byte(url))
+	b, err := acache.Get(url)
 	if err == nil {
 		return b, nil
 	}
@@ -69,10 +72,7 @@ func httpcache(url string) ([]byte, error) {
 		if err != nil {
 			return nil, err
 		}
-		err = acache.Set([]byte(url), b, 60*10)
-		if err != nil {
-			return nil, err
-		}
+		acache.Set(url, b)
 		return b, nil
 	})
 	if err != nil {
