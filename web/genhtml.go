@@ -46,11 +46,7 @@ var t *template.Template
 
 func init() {
 	var err error
-	t, err = template.New("page").Parse(searchhtml)
-	if err != nil {
-		panic(err)
-	}
-	t, err = t.New("body").Parse(body)
+	t, err = template.ParseFS(htmlfs, "html/*")
 	if err != nil {
 		panic(err)
 	}

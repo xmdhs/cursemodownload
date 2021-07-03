@@ -47,7 +47,11 @@ func e(w http.ResponseWriter, err error) {
 }
 
 func Index(w http.ResponseWriter, req *http.Request) {
-	w.Write([]byte(index))
+	b, err := htmlfs.ReadFile("html/index.html")
+	if err != nil {
+		panic(err)
+	}
+	w.Write(b)
 }
 
 func search(txt, offset string) ([]resultslist, error) {
@@ -108,7 +112,7 @@ func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
 		e(w, err)
 		return
 	}
-	http.Redirect(w, req, link, 302)
+	http.Redirect(w, req, link, http.StatusFound)
 }
 
 func History(w http.ResponseWriter, req *http.Request) {
