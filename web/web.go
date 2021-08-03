@@ -57,6 +57,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	index = w.Bytes()
 }
 
 var index []byte
