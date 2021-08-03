@@ -51,9 +51,9 @@ func e(w http.ResponseWriter, err error) {
 func init() {
 	w := &bytes.Buffer{}
 	type Title struct {
-		Title string
+		Name string
 	}
-	err := t.ExecuteTemplate(w, "index", Title{Title: "curseforge mod 下载"})
+	err := t.ExecuteTemplate(w, "index", Title{Name: "curseforge mod 下载"})
 	if err != nil {
 		panic(err)
 	}
