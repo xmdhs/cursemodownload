@@ -29,7 +29,7 @@ func pase(w io.Writer, list []resultslist, Name, page, link, titilelink string) 
 		Link = link + Name + "&page=" + page
 	}
 	r := results{
-		Name:       Name,
+		Name:       Name + " - curseforge mod",
 		Link:       Link,
 		List:       list,
 		WebsiteURL: titilelink,

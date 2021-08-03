@@ -1,6 +1,7 @@
 package web
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"html/template"
@@ -47,12 +48,21 @@ func e(w http.ResponseWriter, err error) {
 	http.Error(w, err.Error(), 500)
 }
 
-func Index(w http.ResponseWriter, req *http.Request) {
-	b, err := htmlfs.ReadFile("html/index.html")
+func init() {
+	w := &bytes.Buffer{}
+	type Title struct {
+		Title string
+	}
+	err := t.ExecuteTemplate(w, "index", Title{Title: "curseforge mod 下载"})
 	if err != nil {
 		panic(err)
 	}
-	w.Write(b)
+}
+
+var index []byte
+
+func Index(w http.ResponseWriter, req *http.Request) {
+	w.Write(index)
 }
 
 func search(txt, offset string) ([]resultslist, error) {
