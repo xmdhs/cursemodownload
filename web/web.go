@@ -127,6 +127,11 @@ func History(w http.ResponseWriter, req *http.Request) {
 		e(w, err)
 		return
 	}
+	info, err := curseapi.AddonInfo(id)
+	if err != nil {
+		e(w, err)
+		return
+	}
 	files := make([]curseapi.Files, 0)
 	for _, v := range h {
 		for _, vv := range v.GameVersion {
@@ -143,7 +148,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 			Txt:   template.HTML(dependenciespase(v.Dependencies)),
 		})
 	}
-	pase(w, r, id+" "+ver, "", "", "")
+	pase(w, r, info.Name+" "+ver, "", "", "")
 }
 
 var releaseType = map[int]string{
