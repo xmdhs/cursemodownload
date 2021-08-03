@@ -108,7 +108,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 				return false
 			}
 		}
-		return true
+		return len(v1l) > len(v2l)
 	})
 
 	if strconv.Itoa(c.ID) == id {
