@@ -87,16 +87,28 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		v2 := c.GameVersionLatestFiles[j].GameVersion
 		v1l := strings.Split(v1, ".")
 		v2l := strings.Split(v2, ".")
-		if len(v1l) == len(v2l) {
-			for i := 0; i < len(v1l); i++ {
-				if v1l[i] > v2l[i] {
-					return true
-				} else if v1l[i] < v2l[i] {
-					return false
-				}
+		a := 0
+		if len(v1l) < len(v2l) {
+			a = len(v1l)
+		} else {
+			a = len(v2l)
+		}
+		for i := 0; i < a; i++ {
+			vn1, err := strconv.Atoi(v1l[i])
+			if err != nil {
+				vn1 = 0
+			}
+			vn2, err := strconv.Atoi(v2l[i])
+			if err != nil {
+				vn2 = 0
+			}
+			if vn1 > vn2 {
+				return true
+			} else if vn1 < vn2 {
+				return false
 			}
 		}
-		return false
+		return true
 	})
 
 	if strconv.Itoa(c.ID) == id {
