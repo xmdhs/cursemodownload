@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -81,6 +82,23 @@ func Info(w http.ResponseWriter, req *http.Request) {
 	var r []resultslist
 	var title string
 	set := make(map[string]struct{})
+	sort.Slice(c.GameVersionLatestFiles, func(i, j int) bool {
+		v1 := c.GameVersionLatestFiles[i].GameVersion
+		v2 := c.GameVersionLatestFiles[j].GameVersion
+		v1l := strings.Split(v1, ".")
+		v2l := strings.Split(v2, ".")
+		if len(v1l) == len(v2l) {
+			for i := 0; i < len(v1l); i++ {
+				if v1l[i] > v2l[i] {
+					return true
+				} else if v1l[i] < v2l[i] {
+					return false
+				}
+			}
+		}
+		return false
+	})
+
 	if strconv.Itoa(c.ID) == id {
 		title = c.Name
 		r = make([]resultslist, 0, len(c.GameVersionLatestFiles))
