@@ -8,6 +8,7 @@ import (
 
 type results struct {
 	Name       string
+	Title      string
 	List       []resultslist
 	Link       string
 	T          bool
@@ -29,7 +30,8 @@ func pase(w io.Writer, list []resultslist, Name, page, link, titilelink string) 
 		Link = link + Name + "&page=" + page
 	}
 	r := results{
-		Name:       Name + " - curseforge mod",
+		Title:      Name + " - curseforge mod",
+		Name:       Name,
 		Link:       Link,
 		List:       list,
 		WebsiteURL: titilelink,

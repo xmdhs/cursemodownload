@@ -51,9 +51,9 @@ func e(w http.ResponseWriter, err error) {
 func init() {
 	w := &bytes.Buffer{}
 	type Title struct {
-		Name string
+		Title string
 	}
-	err := t.ExecuteTemplate(w, "index", Title{Name: "curseforge mod 下载"})
+	err := t.ExecuteTemplate(w, "index", Title{Title: "curseforge mod 下载"})
 	if err != nil {
 		panic(err)
 	}
@@ -163,13 +163,24 @@ func History(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	id, ver := q["id"][0], q["ver"][0]
+	ch := make(chan curseapi.Modinfo, 10)
+	errCh := make(chan error, 10)
+	go func() {
+		info, err := curseapi.AddonInfo(id)
+		if err != nil {
+			errCh <- err
+		}
+		ch <- info
+	}()
 	h, err := curseapi.Addonfiles(id)
 	if err != nil {
 		e(w, err)
 		return
 	}
-	info, err := curseapi.AddonInfo(id)
-	if err != nil {
+	var info curseapi.Modinfo
+	select {
+	case info = <-ch:
+	case err = <-errCh:
 		e(w, err)
 		return
 	}
@@ -189,7 +200,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 			Txt:   template.HTML(dependenciespase(v.Dependencies)),
 		})
 	}
-	pase(w, r, info.Name+" "+ver, "", "", "")
+	pase(w, r, info.Name+" "+ver, "", "", info.WebsiteUrl)
 }
 
 var releaseType = map[int]string{
