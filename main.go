@@ -17,11 +17,11 @@ func main() {
 	r.HandleFunc("/curseforge/download", web.Getdownloadlink)
 	r.HandleFunc("/curseforge/history", web.History)
 	s := http.Server{
-		Addr:         ":8082",
+		Addr:         "127.23.51.3:80",
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 20 * time.Second,
 		Handler:      r,
 	}
-	browser.OpenURL("http://127.0.0.1:8082/curseforge")
+	browser.OpenURL("http://127.23.51.3:80/curseforge")
 	log.Println(s.ListenAndServe())
 }
