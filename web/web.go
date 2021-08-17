@@ -26,7 +26,7 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	if page == "" {
 		page = "0"
 	}
-	sectionId, ok := sectionIds[req.FormValue("section")]
+	sectionId, ok := sectionIds[req.FormValue("type")]
 	if !ok {
 		sectionId = 6
 	}
