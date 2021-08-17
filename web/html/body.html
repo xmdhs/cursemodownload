@@ -11,7 +11,20 @@
 {{end}} 
 {{if .T}}<br>
 <hr>
-<p><a href="{{ .Link}}">more</a></p>
+<p><a href="" id="more">more</a></p>
+<script>
+    document.addEventListener("load",() => {
+        let u = new URL(window.location.href);
+        let uq = new URLSearchParams(u.search);
+        let page = uq.get("page")
+        if (!page) {
+            page = 0
+        }
+        uq.set("page", page + 1);
+        u.search = uq.toString();
+        document.getElementById("more").href = u.toString();
+    })
+</script>
 {{else}}
 {{end}}
 {{end}}

@@ -51,8 +51,7 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	i++
-	page = strconv.FormatInt(i, 10)
-	pase(w, r, query, page, "./s?q=", "")
+	pase(w, r, query, "./s?q=", "")
 }
 
 func e(w http.ResponseWriter, err error) {
@@ -149,7 +148,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	pase(w, r, title, "", "", c.WebsiteUrl)
+	pase(w, r, title, "", c.WebsiteUrl)
 }
 
 func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
@@ -211,7 +210,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 			Txt:   template.HTML(dependenciespase(v.Dependencies)),
 		})
 	}
-	pase(w, r, info.Name+" "+ver, "", "", info.WebsiteUrl)
+	pase(w, r, info.Name+" "+ver, "", info.WebsiteUrl)
 }
 
 var releaseType = map[int]string{

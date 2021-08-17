@@ -10,7 +10,6 @@ type results struct {
 	Name       string
 	Title      string
 	List       []resultslist
-	Link       string
 	T          bool
 	WebsiteURL string
 }
@@ -21,18 +20,14 @@ type resultslist struct {
 	Txt   template.HTML
 }
 
-func pase(w io.Writer, list []resultslist, Name, page, link, titilelink string) {
+func pase(w io.Writer, list []resultslist, Name, link, titilelink string) {
 	T := true
-	Link := ""
-	if len(list) != 20 || page == "" {
+	if len(list) != 20 {
 		T = false
-	} else {
-		Link = link + Name + "&page=" + page
 	}
 	r := results{
 		Title:      Name + " - curseforge mod",
 		Name:       Name,
-		Link:       Link,
 		List:       list,
 		WebsiteURL: titilelink,
 		T:          T,
