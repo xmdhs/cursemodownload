@@ -64,7 +64,7 @@ func init() {
 	type Title struct {
 		Title string
 	}
-	err := t.ExecuteTemplate(w, "index", Title{Title: "curseforge mod 下载"})
+	err := t.ExecuteTemplate(w, "index", Title{Title: "curseforge 快速下载"})
 	if err != nil {
 		panic(err)
 	}
