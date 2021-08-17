@@ -19,8 +19,8 @@
         let page = uq.get("page")
         if (!page) {
             page = 0
-        }
-        uq.set("page", page + 1);
+        }    
+        uq.set("page", Number(page) + 1);
         u.search = uq.toString();
         document.getElementById("more").href = u.toString();
     })
