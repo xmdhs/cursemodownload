@@ -13,7 +13,7 @@
 <hr>
 <p><a href="" id="more">more</a></p>
 <script>
-    document.addEventListener("load",() => {
+    window.addEventListener("load",() => {
         let u = new URL(window.location.href);
         let uq = new URLSearchParams(u.search);
         let page = uq.get("page")
