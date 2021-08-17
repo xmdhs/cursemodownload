@@ -13,11 +13,22 @@ import (
 	"github.com/xmdhs/cursemodownload/curseapi"
 )
 
+var sectionIds = map[string]int{
+	"1": 6,
+	"2": 12,
+	"3": 4471,
+	"4": 17,
+}
+
 func WebRoot(w http.ResponseWriter, req *http.Request) {
 	query := req.FormValue("q")
 	page := req.FormValue("page")
 	if page == "" {
 		page = "0"
+	}
+	sectionId, ok := sectionIds[req.FormValue("section")]
+	if !ok {
+		sectionId = 6
 	}
 	if len(query) > 100 {
 		err := errors.New("关键词过长")
@@ -30,7 +41,7 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	page = strconv.FormatInt(i*20, 10)
-	r, err := search(query, page)
+	r, err := search(query, page, sectionId)
 	if err != nil {
 		e(w, err)
 		return
@@ -66,8 +77,8 @@ func Index(w http.ResponseWriter, req *http.Request) {
 	w.Write(index)
 }
 
-func search(txt, offset string) ([]resultslist, error) {
-	c, err := curseapi.Searchmod(txt, offset)
+func search(txt, offset string, sectionId int) ([]resultslist, error) {
+	c, err := curseapi.Searchmod(txt, offset, sectionId)
 	if err != nil {
 		return nil, err
 	}

@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"net/url"
 	"sort"
+	"strconv"
 )
 
 //From https://gaz492.github.io/TwitchAPI/
 
-func Searchmod(key string, index string) ([]Modinfo, error) {
-	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&sectionId=6&sort=0`
+func Searchmod(key string, index string, sectionId int) ([]Modinfo, error) {
+	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&sectionId=` + strconv.Itoa(sectionId) + `&sort=0`
 	b, err := httpcache(aurl)
 	if err != nil {
 		return nil, fmt.Errorf("Searchmod: %w", err)
