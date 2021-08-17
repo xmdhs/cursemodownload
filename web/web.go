@@ -26,7 +26,8 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	if page == "" {
 		page = "0"
 	}
-	sectionId, ok := sectionIds[req.FormValue("type")]
+	atype := req.FormValue("type")
+	sectionId, ok := sectionIds[atype]
 	if !ok {
 		sectionId = 6
 	}
@@ -51,7 +52,9 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	i++
-	pase(w, r, query, "./s?q=", "")
+	page = strconv.FormatInt(i, 10)
+	link := "./s?q=" + query + "&type=" + atype + "&page=" + page
+	pase(w, r, query, link, "")
 }
 
 func e(w http.ResponseWriter, err error) {
