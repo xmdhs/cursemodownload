@@ -5,10 +5,10 @@
 
 <body>
     <div class="container-lg px-3 my-5 markdown-body">
-        <h1>curseforge 快速下载</h1>
+        <h1 id="h">CurseForge Mod 下载</h1>
         <form action="/curseforge/s" target="_blank">
             <input type="search" name="q">
-            <select name="type">
+            <select name="type" id="s">
                 <option value="1">Mod</option>
                 <option value="2">Resource Packs</option>
                 <option value="3">Modpacks</option>
@@ -19,12 +19,25 @@
         <hr>
         <details>
             <summary>说明</summary>
-            <p>输入 mod 的英文名，回车即可</p>
-            <p>本站并非镜像站，只是利用 curseforge 提供的 api 来实现搜索和显示下载链接的。对于显示的内容不保证最新，下载的文件不保证完整性。</p>
+            <p id="p">输入 Mod 的英文名，回车即可</p>
+            <p>本站并非镜像站，只是利用 CurseForge 提供的 api 来实现搜索和显示下载链接的。对于显示的内容不保证最新，下载的文件不保证完整性。</p>
         </details>
     </div>
     {{template "footer" .}}
 </body>
+
+<script>
+    document.querySelector("#s").addEventListener("input", (e) => {
+        const ops = e.target.selectedOptions;
+        if (ops.length > 0) {
+            const name = ops[0].textContent;
+            tiltie = `CurseForge ${name} 下载`;
+            document.querySelector("#h").textContent = `CurseForge ${name} 下载`;
+            document.title = `CurseForge ${name} 下载`;
+            document.querySelector("#p").textContent = `输入 ${name} 的英文名，回车即可`;
+        }
+    })
+</script>
 
 </html>
 {{end}}
