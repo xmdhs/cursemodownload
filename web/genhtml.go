@@ -7,12 +7,13 @@ import (
 )
 
 type results struct {
-	Name       string
-	Title      string
-	List       []resultslist
-	Link       string
-	T          bool
-	WebsiteURL string
+	Name        string
+	Title       string
+	List        []resultslist
+	Link        string
+	T           bool
+	WebsiteURL  string
+	Description string
 }
 
 type resultslist struct {
@@ -21,18 +22,19 @@ type resultslist struct {
 	Txt   template.HTML
 }
 
-func pase(w io.Writer, list []resultslist, Name, nextlink, titilelink string) {
+func pase(w io.Writer, list []resultslist, Name, nextlink, titilelink, Description string) {
 	T := true
 	if len(list) != 20 || nextlink == "" {
 		T = false
 	}
 	r := results{
-		Title:      Name + " - curseforge mod",
-		Name:       Name,
-		Link:       nextlink,
-		List:       list,
-		WebsiteURL: titilelink,
-		T:          T,
+		Title:       Name + " - curseforge mod",
+		Name:        Name,
+		Link:        nextlink,
+		List:        list,
+		WebsiteURL:  titilelink,
+		T:           T,
+		Description: Description,
 	}
 	err := t.ExecuteTemplate(w, "page", r)
 	if err != nil {

@@ -54,7 +54,7 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	i++
 	page = strconv.FormatInt(i, 10)
 	link := "./s?q=" + query + "&type=" + atype + "&page=" + page
-	pase(w, r, query, link, "")
+	pase(w, r, query, link, "", "")
 }
 
 func e(w http.ResponseWriter, err error) {
@@ -151,7 +151,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	pase(w, r, title, "", c.WebsiteUrl)
+	pase(w, r, title, "", c.WebsiteUrl, c.Name+" - "+c.Summary+" files download")
 }
 
 func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
@@ -213,7 +213,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 			Txt:   template.HTML(dependenciespase(v.Dependencies)),
 		})
 	}
-	pase(w, r, info.Name+" "+ver, "", info.WebsiteUrl)
+	pase(w, r, info.Name+" "+ver, "", info.WebsiteUrl, info.Name+" - "+ver+" - "+info.Summary+" files download")
 }
 
 var releaseType = map[int]string{
@@ -225,7 +225,7 @@ var releaseType = map[int]string{
 func dependenciespase(dependencies []curseapi.Dependencies) string {
 	s := strings.Builder{}
 	i := 0
-	s.WriteString(`<p>依赖：`)
+	s.WriteString(`<p>dependencies: `)
 	for _, v := range dependencies {
 		if v.Type == 3 {
 			s.WriteString(`<a href="` + dependencies2url(v) + `" target="_blank">` + strconv.Itoa(v.AddonId) + `</a> `)
