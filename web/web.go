@@ -136,6 +136,8 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		return len(v1l) > len(v2l)
 	})
 
+	vers := strings.Builder{}
+
 	if strconv.Itoa(c.ID) == id {
 		title = c.Name
 		r = make([]resultslist, 0, len(c.GameVersionLatestFiles))
@@ -147,12 +149,15 @@ func Info(w http.ResponseWriter, req *http.Request) {
 					Title: template.HTMLEscapeString(v.GameVersion),
 					Link:  link,
 				}
+
+				vers.WriteString(v.GameVersion + " ")
+
 				r = append(r, temp)
 			}
 		}
 	}
 
-	pase(w, r, title, "", c.WebsiteUrl, c.Name+" - "+c.Summary+" files download")
+	pase(w, r, title, "", c.WebsiteUrl, c.Name+" - "+c.Summary+" - files download "+vers.String())
 }
 
 func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
@@ -214,7 +219,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 			Txt:   template.HTML(dependenciespase(v.Dependencies)),
 		})
 	}
-	pase(w, r, info.Name+" "+ver, "", info.WebsiteUrl, info.Name+" - "+ver+" - "+info.Summary+" files download")
+	pase(w, r, info.Name+" "+ver, "", info.WebsiteUrl, info.Name+" - "+ver+" - "+info.Summary+" - files download")
 }
 
 var releaseType = map[int]string{
