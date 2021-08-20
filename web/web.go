@@ -64,9 +64,10 @@ func e(w http.ResponseWriter, err error) {
 func init() {
 	w := &bytes.Buffer{}
 	type Title struct {
-		Title string
+		Title       string
+		Description string
 	}
-	err := t.ExecuteTemplate(w, "index", Title{Title: "curseforge 快速下载"})
+	err := t.ExecuteTemplate(w, "index", Title{Title: "curseforge 快速下载", Description: "快速下载 curseforge 上的 mod 以及其他。"})
 	if err != nil {
 		panic(err)
 	}
