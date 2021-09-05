@@ -2,8 +2,7 @@ package web
 
 import (
 	"html/template"
-	"io"
-	"log"
+	"net/http"
 )
 
 type results struct {
@@ -14,18 +13,29 @@ type results struct {
 	T           bool
 	WebsiteURL  string
 	Description string
+	Table       bool
+	Script      template.HTML
+	Tr          []string
 }
 
 type resultslist struct {
-	Title string
-	Link  string
-	Txt   template.HTML
+	Title  string
+	Link   string
+	Txt    template.HTML
+	TdList []template.HTML
 }
 
-func pase(w io.Writer, list []resultslist, Name, nextlink, titilelink, Description string) {
+func tablepase(w http.ResponseWriter, list []resultslist, Name, nextlink, titilelink, Description string, script template.HTML, tr []string) {
 	T := true
 	if len(list) != 20 || nextlink == "" {
 		T = false
+	}
+	Table := false
+	for _, v := range list {
+		if len(v.TdList) > 0 {
+			Table = true
+			break
+		}
 	}
 	r := results{
 		Title:       Name + " - curseforge mod",
@@ -35,12 +45,19 @@ func pase(w io.Writer, list []resultslist, Name, nextlink, titilelink, Descripti
 		WebsiteURL:  titilelink,
 		T:           T,
 		Description: Description,
+		Table:       Table,
+		Script:      script,
+		Tr:          tr,
 	}
 	err := t.ExecuteTemplate(w, "page", r)
 	if err != nil {
-		log.Println(err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
+}
+
+func pase(w http.ResponseWriter, list []resultslist, Name, nextlink, titilelink, Description string) {
+	tablepase(w, list, Name, nextlink, titilelink, Description, "", nil)
 }
 
 var t *template.Template

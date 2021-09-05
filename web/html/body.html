@@ -4,11 +4,25 @@
 {{else}}
 <h1>{{.Name}}</h1>
 {{end}}
-{{range .List}}<h3><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
+{{if .Table}}
+<table>
+    <tbody id="tb">
+        <tr>
+            {{range .Tr}}<th>{{.}}</th>{{end}}
+        </tr>
+        {{range .List}}<tr>
+            {{range .TdList}}<td>{{.}}</td>{{end}}
+        </tr>{{end}}
+    </tbody>
+</table>
+{{else}}
+{{range .List}}
+<h3><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
 <blockquote>
     <p>{{ .Txt}}</p>
 </blockquote>
-{{end}} 
+{{end}}
+{{end}}
 {{if .T}}<br>
 <hr>
 <p><a href="{{ .Link}}">more</a></p>

@@ -9,6 +9,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/xmdhs/cursemodownload/curseapi"
 )
@@ -33,18 +34,18 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	}
 	if len(query) > 100 {
 		err := errors.New("关键词过长")
-		e(w, err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	i, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
-		e(w, err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	page = strconv.FormatInt(i*20, 10)
 	r, err := search(query, page, sectionId)
 	if err != nil {
-		e(w, err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	if len(r) == 0 {
@@ -55,10 +56,6 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	page = strconv.FormatInt(i, 10)
 	link := "./s?q=" + query + "&type=" + atype + "&page=" + page
 	pase(w, r, query, link, "", "")
-}
-
-func e(w http.ResponseWriter, err error) {
-	http.Error(w, err.Error(), 500)
 }
 
 func init() {
@@ -101,7 +98,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 	id := req.FormValue("id")
 	c, err := curseapi.AddonInfo(id)
 	if err != nil {
-		e(w, err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	var r []resultslist
@@ -164,12 +161,12 @@ func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 	id := q.Get("id")
 	if id == "" {
-		e(w, errors.New(`""`))
+		http.Error(w, "", 500)
 		return
 	}
 	link, err := curseapi.FileId2downloadlink(id)
 	if err != nil {
-		e(w, err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	http.Redirect(w, req, link, http.StatusFound)
@@ -178,7 +175,7 @@ func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
 func History(w http.ResponseWriter, req *http.Request) {
 	q := req.URL.Query()
 	if len(q["id"]) == 0 || len(q["ver"]) == 0 {
-		e(w, errors.New(`""`))
+		http.Error(w, "", 500)
 		return
 	}
 	id, ver := q["id"][0], q["ver"][0]
@@ -193,14 +190,14 @@ func History(w http.ResponseWriter, req *http.Request) {
 	}()
 	h, err := curseapi.Addonfiles(id)
 	if err != nil {
-		e(w, err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	var info curseapi.Modinfo
 	select {
 	case info = <-ch:
 	case err = <-errCh:
-		e(w, err)
+		http.Error(w, err.Error(), 500)
 		return
 	}
 	files := make([]curseapi.Files, 0)
@@ -213,14 +210,56 @@ func History(w http.ResponseWriter, req *http.Request) {
 	}
 	r := make([]resultslist, 0)
 	for _, v := range files {
+		tdlist := make([]template.HTML, 0)
+		tdlist = append(tdlist, template.HTML(`<a href="`+template.HTMLEscapeString(v.DownloadUrl)+`" target="_blank">`+template.HTMLEscapeString(v.FileName)+`</a>`))
+		tdlist = append(tdlist, template.HTML(template.HTMLEscapeString(releaseType[v.ReleaseType])))
+		atime, err := time.Parse(time.RFC3339, v.FileDate)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		tdlist = append(tdlist, template.HTML(strconv.FormatInt(atime.Unix(), 10)))
+		d := dependenciespase(v.Dependencies)
+		if d == "" {
+			d = "none"
+		}
+		tdlist = append(tdlist, template.HTML(d))
 		r = append(r, resultslist{
-			Title: v.FileName + " " + releaseType[v.ReleaseType],
-			Link:  v.DownloadUrl,
-			Txt:   template.HTML(dependenciespase(v.Dependencies)),
+			TdList: tdlist,
 		})
 	}
-	pase(w, r, info.Name+" "+ver, "", info.WebsiteUrl, info.Name+" - "+ver+" - "+info.Summary+" - files download")
+	tablepase(w, r, info.Name+" "+ver, "", info.WebsiteUrl, info.Name+" - "+ver+" - "+info.Summary+" - files download", template.HTML(timeJs), tdname)
 }
+
+var tdname = []string{"File name", "Release Type", "File Date", "Dependencies"}
+
+const timeJs = `<script>
+let dom = document.querySelectorAll("#tb > tr > td:nth-child(3)")
+for (const v of dom) {
+	let atime = v.textContent
+	v.textContent = transformTime(atime)
+}
+function transformTime(timestamp) {
+	if (typeof timestamp == "string") {
+		if (!isNaN(new Number(timestamp))) {
+			var time = new Date(timestamp * 1000);
+			var y = time.getFullYear();
+			var M = time.getMonth() + 1;
+			var d = time.getDate();
+			var h = time.getHours();
+			var m = time.getMinutes();
+			return y + '-' + addZero(M) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(m)
+		} else {
+			return timestamp
+		}
+	} else {
+		return '';
+	}
+}
+function addZero(m) {
+		return m < 10 ? '0' + m : m;
+}
+</script>`
 
 var releaseType = map[int]string{
 	1: "Release",
@@ -231,14 +270,12 @@ var releaseType = map[int]string{
 func dependenciespase(dependencies []curseapi.Dependencies) string {
 	s := strings.Builder{}
 	i := 0
-	s.WriteString(`<p>dependencies: `)
 	for _, v := range dependencies {
 		if v.Type == 3 {
 			s.WriteString(`<a href="` + dependencies2url(v) + `" target="_blank">` + strconv.Itoa(v.AddonId) + `</a> `)
 			i++
 		}
 	}
-	s.WriteString(`</p>`)
 	if i == 0 {
 		return ""
 	}

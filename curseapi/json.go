@@ -31,6 +31,7 @@ func json2Modinfo(jsonbyte []byte) ([]Modinfo, error) {
 type Files struct {
 	ID           int            `json:"id"`
 	FileName     string         `json:"fileName"`
+	FileDate     string         `json:"fileDate"`
 	Dependencies []Dependencies `json:"dependencies"`
 	DownloadUrl  string         `json:"downloadUrl"`
 	GameVersion  []string       `json:"gameVersion"`
