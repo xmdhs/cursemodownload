@@ -7,4 +7,9 @@ require (
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 )
 
-require golang.org/x/sys v0.0.0-20210319071255-635bc2c9138d // indirect
+require (
+	github.com/VictoriaMetrics/fastcache v1.6.0 // indirect
+	github.com/cespare/xxhash/v2 v2.1.1 // indirect
+	github.com/golang/snappy v0.0.3 // indirect
+	golang.org/x/sys v0.0.0-20210324051608-47abb6519492 // indirect
+)

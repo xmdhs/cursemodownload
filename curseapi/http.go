@@ -46,7 +46,7 @@ func httpget(url string) ([]byte, error) {
 	return b, err
 }
 
-var acache = newcache()
+var acache = newcache(30 * time.Minute)
 
 var s = singleflight.Group{}
 

@@ -1,50 +1,24 @@
 package curseapi
 
 import (
-	"context"
-	"sync"
+	"bytes"
+	"encoding/binary"
 	"time"
+
+	"github.com/VictoriaMetrics/fastcache"
 )
 
 type cache struct {
-	m      sync.Map
-	cancel func()
+	f       *fastcache.Cache
+	cancel  func()
+	expdate time.Duration
 }
 
-type date struct {
-	Time int64
-	Date []byte
-}
-
-func newcache() *cache {
+func newcache(expdata time.Duration) *cache {
 	c := &cache{}
-	cxt := context.Background()
-	cxt, cancel := context.WithCancel(cxt)
-	c.cancel = cancel
-	c.delete(cxt)
+	c.f = fastcache.New(32000000)
+	c.expdate = expdata
 	return c
-}
-
-func (c *cache) delete(cxt context.Context) {
-	go func() {
-		t := time.NewTicker(10 * time.Minute)
-		defer t.Stop()
-		for {
-			c.m.Range(func(key, value interface{}) bool {
-				d := value.(date)
-				if time.Now().Unix()-d.Time > 1800 {
-					c.m.Delete(key)
-				}
-				return true
-			})
-
-			select {
-			case <-cxt.Done():
-				return
-			case <-t.C:
-			}
-		}
-	}()
 }
 
 func (c *cache) Close() {
@@ -52,21 +26,35 @@ func (c *cache) Close() {
 }
 
 func (c *cache) Load(key string) []byte {
-	t, ok := c.m.Load(key)
-	if !ok {
+	b := c.f.GetBig(nil, []byte(key))
+	if b == nil {
+		b = c.f.Get(nil, []byte(key))
+		if b == nil {
+			return nil
+		}
+	}
+	var d int64
+	err := binary.Read(bytes.NewReader(b[:8]), binary.BigEndian, &d)
+	if err != nil {
 		return nil
 	}
-	d, ok := t.(date)
-	if !ok {
+	t := time.Unix(d, 0)
+	if t.Before(time.Now()) {
+		c.f.Del([]byte(key))
 		return nil
 	}
-	return d.Date
+	return b[8:]
 }
 
 func (c *cache) Store(key string, adate []byte) {
-	d := date{
-		Date: adate,
-		Time: time.Now().Unix(),
+	w := bytes.NewBuffer(nil)
+	binary.Write(w, binary.BigEndian, time.Now().Add(c.expdate).Unix())
+	w.Write(adate)
+	b := w.Bytes()
+
+	if len(b) > 64000 {
+		c.f.SetBig([]byte(key), b)
+	} else {
+		c.f.Set([]byte(key), b)
 	}
-	c.m.Store(key, d)
 }
