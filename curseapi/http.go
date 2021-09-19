@@ -28,6 +28,9 @@ func httpget(url string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("httpget: %w", err)
 	}
+	if rep.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("httpget: %w", ErrHttpCode{Code: rep.StatusCode})
+	}
 	var reader io.ReadCloser
 	switch rep.Header.Get("Content-Encoding") {
 	case "gzip":
@@ -46,11 +49,19 @@ func httpget(url string) ([]byte, error) {
 	return b, err
 }
 
+type ErrHttpCode struct {
+	Code int
+}
+
+func (e ErrHttpCode) Error() string {
+	return fmt.Sprintf("ErrHttpCode: %d", e.Code)
+}
+
 var acache = newcache(30 * time.Minute)
 
 var s = singleflight.Group{}
 
-func httpcache(url string) ([]byte, error) {
+func httpcache(url string, acache *cache) ([]byte, error) {
 	b := acache.Load(url)
 	if b != nil {
 		return b, nil

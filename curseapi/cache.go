@@ -58,3 +58,7 @@ func (c *cache) Store(key string, adate []byte) {
 		c.f.Set([]byte(key), b)
 	}
 }
+
+func (c *cache) Delete(key string) {
+	c.f.Del([]byte(key))
+}
