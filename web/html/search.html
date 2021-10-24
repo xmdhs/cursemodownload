@@ -1,0 +1,25 @@
+{{define "search"}}
+<form action="/curseforge/s" target="_blank">
+    <div class="mdui-row">
+        <div class="mdui-col-md-1"></div>
+        <div class="mdui-col-xs-7">
+            <div class="mdui-textfield mdui-textfield-floating-label" style="padding-top: 4px;">
+                <i class="mdui-icon material-icons">search</i>
+                <label class="mdui-textfield-label">搜索一下</label>
+                <input class="mdui-textfield-input" type="search" name="q" width="500" />
+            </div>
+        </div>
+        <div class="mdui-col-xs-1">
+        </div>
+        <div class="mdui-col-xs-4 mdui-col-md-2" style="padding-top: 24px;">
+            <select name="type" id="s" mdui-select="{position: 'bottom'}">
+                <option value="1">Mod</option>
+                <option value="2">Resource Pack</option>
+                <option value="3">Modpack</option>
+                <option value="4">World</option>
+            </select>
+        </div>
+        <div class="mdui-col-md-1"></div>
+    </div>
+</form>
+{{end}}

@@ -64,7 +64,7 @@ func init() {
 		Title       string
 		Description string
 	}
-	err := t.ExecuteTemplate(w, "index", Title{Title: "CurseForge 搜索 - 搜索 CurseForge 上的东西并下载。", Description: "搜索 CurseForge 上的东西并下载。"})
+	err := t.ExecuteTemplate(w, "index", Title{Title: "CurseForge 搜索 - 搜索 CurseForge 上的东西并下载", Description: "搜索 CurseForge 上的东西并下载。"})
 	if err != nil {
 		panic(err)
 	}
