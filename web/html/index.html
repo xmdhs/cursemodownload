@@ -3,14 +3,14 @@
 <html>
 {{template "head" .}}
 
-<body class="mdui-theme-accent-orange mdui-theme-primary-orange" style="padding-top: 80px">
+<body class="mdui-theme-accent-red mdui-theme-primary-orange" style="padding-top: 80px">
 <br />
 <div class="mdui-container px-3 my-5">
-<p class="mdui-text-center"><font size="6" color="orange"><b>CurseForge</b> 搜索</font></p>
-<p class="mdui-text-center"><font size="2" color="orange">翻 箱 倒 柜</font></p>
+<p class="mdui-text-center"><font size="6" onclick="location.href = '/curseforge'"><b>CurseForge</b> 搜索</font></p>
+<p class="mdui-text-center"><font size="2">翻 箱 倒 柜</font></p>
 <form action="/curseforge/s" target="_blank">
 <div class="mdui-row">
-<div class="mdui-col-xs-1">
+<div class="mdui-col-md-1">
 </div>
 <div class="mdui-col-xs-7">
   <div class="mdui-textfield mdui-textfield-floating-label" style="padding-top: 4px;">
@@ -21,7 +21,7 @@
 </div>
 <div class="mdui-col-xs-1">
 </div>
-<div class="mdui-col-xs-2" style="padding-top: 24px;">
+<div class="mdui-col-xs-4 mdui-col-md-2" style="padding-top: 24px;">
   <select name="type" id="s" mdui-select="{position: 'bottom'}">
      <option value="1">Mod</option>
      <option value="2">Resource Pack</option>
@@ -29,7 +29,7 @@
      <option value="4">World</option>
   </select>
 </div>
-<div class="mdui-col-xs-1">
+<div class="mdui-col-md-1">
 </div>
 </div>
 </form>

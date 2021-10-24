@@ -1,11 +1,10 @@
 {{define "body"}}
 <div class="mdui-container px-3 my-5">
-<p class="mdui-text-center"><font size="6" color="orange"><b>CurseForge</b> 搜索</font></p>
-<p class="mdui-text-center"><font size="2" color="orange">翻 箱 倒 柜</font></p>
+<p class="mdui-text-center" onclick="location.href = '/curseforge'"><font size="6"><b>CurseForge</b> 搜索</font>
+<p class="mdui-text-center"><font size="2">翻 箱 倒 柜</font></p>
 <form action="/curseforge/s" target="_blank">
 <div class="mdui-row">
-<div class="mdui-col-xs-1">
-</div>
+<div class="mdui-col-md-1"></div>
 <div class="mdui-col-xs-7">
   <div class="mdui-textfield mdui-textfield-floating-label" style="padding-top: 4px;">
     <i class="mdui-icon material-icons">search</i>
@@ -15,7 +14,7 @@
 </div>
 <div class="mdui-col-xs-1">
 </div>
-<div class="mdui-col-xs-2" style="padding-top: 24px;">
+<div class="mdui-col-xs-4 mdui-col-md-2" style="padding-top: 24px;">
   <select name="type" id="s" mdui-select="{position: 'bottom'}">
      <option value="1">Mod</option>
      <option value="2">Resource Pack</option>
@@ -23,7 +22,7 @@
      <option value="4">World</option>
   </select>
 </div>
-<div class="mdui-col-xs-1">
+<div class="mdui-col-md-1">
 </div>
 </div>
 </form>
@@ -51,11 +50,13 @@
 {{else}}
 {{range .List}}
 <div class="mdui-card mdui-hoverable" style="border-radius: 10px;">
-  <div class="mdui-card-primary">
-    <h3 class="mdui-typo"><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
-    <blockquote class="mdui-typo">
-       <p>{{ .Txt}}</p>
-    </blockquote>
+  <div class="mdui-card-primary mdui-ripple" onclick="window.open('{{ .Link}}')">
+    <div class="mdui-card-primary-title">
+      <h3 class="mdui-typo"><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
+    </div>
+    <div class="mdui-card-primary-subtitle">
+      <p class="mdui-typo">{{ .Txt}}</p>
+    </div>
   </div>
 </div>
 <br />
@@ -63,7 +64,7 @@
 {{end}}
 {{if .T}}
 <br />
-<a href="{{ .Link}}" class="mdui-btn mdui-ripple mdui-center mdui-hoverable" style="border-radius: 10px;"><font size="4" color="orange">查看更多</font></a>
+<a href="{{ .Link}}" class="mdui-btn mdui-ripple mdui-center mdui-hoverable" style="border-radius: 10px;"><font size="4" color="#FF9800">查看更多</font></a>
 {{else}}
 {{end}}
 {{end}}

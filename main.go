@@ -1,12 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"time"
-	"fmt"
 
-    "github.com/pkg/browser"
+	"github.com/pkg/browser"
 	"github.com/xmdhs/cursemodownload/web"
 )
 
@@ -18,12 +18,12 @@ func main() {
 	r.HandleFunc("/curseforge/download", web.Getdownloadlink)
 	r.HandleFunc("/curseforge/history", web.History)
 	s := http.Server{
-		Addr:         "127.0.0.1:11451",
+		Addr:         "127.0.0.1:8082",
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 20 * time.Second,
 		Handler:      r,
 	}
 	fmt.Println("WebServer Starting...")
-	browser.OpenURL("http://localhost:11451/curseforge")
+	browser.OpenURL("http://127.0.0.1:8082/curseforge")
 	log.Println(s.ListenAndServe())
 }
