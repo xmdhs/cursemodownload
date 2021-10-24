@@ -38,7 +38,7 @@ func tablepase(w http.ResponseWriter, list []resultslist, Name, nextlink, titile
 		}
 	}
 	r := results{
-		Title:       Name + " - CurseForge 下载",
+		Title:       Name + " - CurseForge mod",
 		Name:        Name,
 		Link:        nextlink,
 		List:        list,

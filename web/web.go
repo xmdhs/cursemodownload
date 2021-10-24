@@ -231,7 +231,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 	tablepase(w, r, info.Name+" "+ver, "", info.WebsiteUrl, info.Name+" - "+ver+" - "+info.Summary+" - files download", template.HTML(timeJs), tdname)
 }
 
-var tdname = []string{"档案名称", "发行版本", "建立日期", "依赖项目"}
+var tdname = []string{"File name", "Release Type", "File Date", "Dependencies"}
 
 const timeJs = `<script>
 let dom = document.querySelectorAll("#tb > tr > td:nth-child(3)")
