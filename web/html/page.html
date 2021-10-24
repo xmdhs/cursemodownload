@@ -1,10 +1,9 @@
-{{define "page"}}<!DOCTYPE html>
+{{define "page"}}
+<!DOCTYPE html>
 <html>
 {{template "head" .}}
-<body>
-    <div class="container-lg px-3 my-5 markdown-body">
+<body class="mdui-theme-accent-orange mdui-theme-primary-orange" style="padding-top: 20px">
         {{template "body" .}}
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/anchor-js/anchor.min.js"></script>
     <script>anchors.add();</script>
     {{template "footer" .}}

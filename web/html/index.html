@@ -3,41 +3,39 @@
 <html>
 {{template "head" .}}
 
-<body>
-    <div class="container-lg px-3 my-5 markdown-body">
-        <h1 id="h">CurseForge Mod 下载</h1>
-        <form action="/curseforge/s" target="_blank">
-            <input type="search" name="q">
-            <select name="type" id="s">
-                <option value="1">Mod</option>
-                <option value="2">Resource Pack</option>
-                <option value="3">Modpack</option>
-                <option value="4">World</option>
-            </select>
-        </form>
-        <br>
-        <hr>
-        <details>
-            <summary>说明</summary>
-            <p id="p">输入 Mod 的英文名，回车即可</p>
-            <p>本站并非镜像站，只是利用 CurseForge 提供的 api 来实现搜索和显示下载链接的。对于显示的内容不保证最新，下载的文件不保证完整性。</p>
-        </details>
-    </div>
-    {{template "footer" .}}
+<body class="mdui-theme-accent-orange mdui-theme-primary-orange" style="padding-top: 80px">
+<br />
+<div class="mdui-container px-3 my-5">
+<p class="mdui-text-center"><font size="6" color="orange"><b>CurseForge</b> 搜索</font></p>
+<p class="mdui-text-center"><font size="2" color="orange">翻 箱 倒 柜</font></p>
+<form action="/curseforge/s" target="_blank">
+<div class="mdui-row">
+<div class="mdui-col-xs-1">
+</div>
+<div class="mdui-col-xs-7">
+  <div class="mdui-textfield mdui-textfield-floating-label" style="padding-top: 4px;">
+    <i class="mdui-icon material-icons">search</i>
+    <label class="mdui-textfield-label">搜索一下</label>
+    <input class="mdui-textfield-input" type="search" name="q" width="500"/>
+  </div>
+</div>
+<div class="mdui-col-xs-1">
+</div>
+<div class="mdui-col-xs-2" style="padding-top: 24px;">
+  <select name="type" id="s" mdui-select="{position: 'bottom'}">
+     <option value="1">Mod</option>
+     <option value="2">Resource Pack</option>
+     <option value="3">Modpack</option>
+     <option value="4">World</option>
+  </select>
+</div>
+<div class="mdui-col-xs-1">
+</div>
+</div>
+</form>
+<br />
+</div>
+  {{template "footer" .}}
 </body>
-
-<script>
-    document.querySelector("#s").addEventListener("input", (e) => {
-        const ops = e.target.selectedOptions;
-        if (ops.length > 0) {
-            const name = ops[0].textContent;
-            tiltie = `CurseForge ${name} 下载`;
-            document.querySelector("#h").textContent = `CurseForge ${name} 下载`;
-            document.title = `CurseForge ${name} 下载`;
-            document.querySelector("#p").textContent = `输入 ${name} 的英文名，回车即可`;
-        }
-    })
-</script>
-
 </html>
 {{end}}

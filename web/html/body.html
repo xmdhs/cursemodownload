@@ -1,11 +1,43 @@
 {{define "body"}}
+<div class="mdui-container px-3 my-5">
+<p class="mdui-text-center"><font size="6" color="orange"><b>CurseForge</b> 搜索</font></p>
+<p class="mdui-text-center"><font size="2" color="orange">翻 箱 倒 柜</font></p>
+<form action="/curseforge/s" target="_blank">
+<div class="mdui-row">
+<div class="mdui-col-xs-1">
+</div>
+<div class="mdui-col-xs-7">
+  <div class="mdui-textfield mdui-textfield-floating-label" style="padding-top: 4px;">
+    <i class="mdui-icon material-icons">search</i>
+    <label class="mdui-textfield-label">搜索一下</label>
+    <input class="mdui-textfield-input" type="search" name="q" width="500"/>
+  </div>
+</div>
+<div class="mdui-col-xs-1">
+</div>
+<div class="mdui-col-xs-2" style="padding-top: 24px;">
+  <select name="type" id="s" mdui-select="{position: 'bottom'}">
+     <option value="1">Mod</option>
+     <option value="2">Resource Pack</option>
+     <option value="3">Modpack</option>
+     <option value="4">World</option>
+  </select>
+</div>
+<div class="mdui-col-xs-1">
+</div>
+</div>
+</form>
+<br />
+<!--标题-->
 {{if .WebsiteURL}}
-<h1><a href="{{ .WebsiteURL}}" target="_blank">{{.Name}}</a></h1>
+<h1 class="mdui-typo"><a href="{{ .WebsiteURL}}" target="_blank">{{.Name}}</a></h1>
 {{else}}
-<h1>{{.Name}}</h1>
+<h1><font size="6">{{.Name}}</font><font size="4"> 的搜索结果</font></h1>
 {{end}}
+<!--内容-->
 {{if .Table}}
-<table>
+<div class="mdui-table-fluid">
+<table class="mdui-table mdui-table-hoverable mdui-typo">
     <tbody id="tb">
         <tr>
             {{range .Tr}}<th>{{.}}</th>{{end}}
@@ -15,17 +47,23 @@
         </tr>{{end}}
     </tbody>
 </table>
+</div>
 {{else}}
 {{range .List}}
-<h3><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
-<blockquote>
-    <p>{{ .Txt}}</p>
-</blockquote>
+<div class="mdui-card mdui-hoverable" style="border-radius: 10px;">
+  <div class="mdui-card-primary">
+    <h3 class="mdui-typo"><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
+    <blockquote class="mdui-typo">
+       <p>{{ .Txt}}</p>
+    </blockquote>
+  </div>
+</div>
+<br />
 {{end}}
 {{end}}
-{{if .T}}<br>
-<hr>
-<p><a href="{{ .Link}}">more</a></p>
+{{if .T}}
+<br />
+<a href="{{ .Link}}" class="mdui-btn mdui-ripple mdui-center mdui-hoverable" style="border-radius: 10px;"><font size="4" color="orange">查看更多</font></a>
 {{else}}
 {{end}}
 {{end}}
