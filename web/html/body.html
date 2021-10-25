@@ -5,7 +5,7 @@
 <br />
 <!--标题-->
 {{if .WebsiteURL}}
-<h1 class="mdui-typo"><a href="{{ .WebsiteURL}}" target="_blank">{{.Name}}</a></h1>
+<h1 class="mdui-typo"><a href="{{ .WebsiteURL}}" target="_blank" rel="noopener noreferrer">{{.Name}}</a></h1>
 {{else}}
 <h1><font size="6">{{.Name}}</font><font size="4"> 的搜索结果</font></h1>
 {{end}}
@@ -26,9 +26,9 @@
 {{else}}
 {{range .List}}
 <div class="mdui-card mdui-hoverable" style="border-radius: 10px;">
-  <div class="mdui-card-primary mdui-ripple" onclick="window.open('{{ .Link}}')">
+  <div class="mdui-card-primary mdui-ripple" onclick="location.href ='{{ .Link}}'">
     <div class="mdui-card-primary-title">
-      <h3 class="mdui-typo"><a href="{{ .Link}}" target="_blank">{{ .Title}}</a></h3>
+      <h3 class="mdui-typo"><a href="{{ .Link}}">{{ .Title}}</a></h3>
     </div>
     <div class="mdui-card-primary-subtitle">
       <p class="mdui-typo">{{ .Txt}}</p>
