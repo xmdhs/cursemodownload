@@ -25,16 +25,17 @@
 </div>
 {{else}}
 {{range .List}}
-<div class="mdui-card mdui-hoverable" style="border-radius: 10px;">
-  <div class="mdui-card-primary mdui-ripple" onclick="location.href ='{{ .Link}}'">
+<a href="{{ .Link}}" style="text-decoration: none"><div class="mdui-card mdui-hoverable" style="border-radius: 10px;">
+  <div class="mdui-card-primary mdui-ripple">
     <div class="mdui-card-primary-title">
-      <h3 class="mdui-typo"><a href="{{ .Link}}">{{ .Title}}</a></h3>
+      <h3 class="mdui-typo mdui-text-color-theme-accent">{{ .Title}}</h3>
     </div>
     <div class="mdui-card-primary-subtitle">
       <p class="mdui-typo">{{ .Txt}}</p>
     </div>
   </div>
 </div>
+</a>
 <br />
 {{end}}
 {{end}}
