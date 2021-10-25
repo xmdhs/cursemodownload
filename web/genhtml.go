@@ -2,6 +2,7 @@ package web
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -51,7 +52,7 @@ func tablepase(w http.ResponseWriter, list []resultslist, Name, nextlink, titile
 	}
 	err := t.ExecuteTemplate(w, "page", r)
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		log.Println(err)
 		return
 	}
 }
