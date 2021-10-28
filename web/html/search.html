@@ -1,17 +1,14 @@
 {{define "search"}}
 <form action="/curseforge/s">
-    <div class="mdui-row">
-        <div class="mdui-col-md-1"></div>
-        <div class="mdui-col-xs-7">
+    <div class="search">
+        <div class="search-input">
             <div class="mdui-textfield mdui-textfield-floating-label" style="padding-top: 4px;">
                 <i class="mdui-icon material-icons">search</i>
                 <label class="mdui-textfield-label">搜索一下</label>
                 <input class="mdui-textfield-input" type="search" name="q" width="500" />
             </div>
         </div>
-        <div class="mdui-col-xs-1">
-        </div>
-        <div class="mdui-col-xs-4 mdui-col-md-2" style="padding-top: 24px;">
+        <div class="search-select" style="padding-top: 24px;">
             <select name="type" id="s" mdui-select="{position: 'bottom'}">
                 <option value="1">Mod</option>
                 <option value="2">Resource Pack</option>
@@ -19,7 +16,31 @@
                 <option value="4">World</option>
             </select>
         </div>
-        <div class="mdui-col-md-1"></div>
     </div>
 </form>
+<style>
+    @media screen and (min-width: 600px) {
+        .search {
+            display: grid;
+            grid-template-columns: 1fr 8fr 1fr 3fr 1fr;
+            grid-gap: 10px;
+        }
+
+        .search-input {
+            grid-column: 2;
+        }
+
+        .search-select {
+            grid-column: 4;
+        }
+    }
+
+    @media screen and (max-width: 600px) {
+        .search {
+            display: grid;
+            grid-template-columns: 1fr 7em;
+            grid-gap: 10px;
+        }
+    }
+</style>
 {{end}}
