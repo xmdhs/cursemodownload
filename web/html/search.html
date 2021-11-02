@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="search-select" style="padding-top: 24px;">
-            <select name="type" id="s" mdui-select="{position: 'bottom'}">
+            <select name="type" id="s" class="mdui-select" mdui-select="{position: 'auto'}">
                 <option value="1">Mod</option>
                 <option value="2">Resource Pack</option>
                 <option value="3">Modpack</option>
@@ -22,8 +22,7 @@
     @media screen and (min-width: 600px) {
         .search {
             display: grid;
-            grid-template-columns: 1fr 8fr 1fr 3fr 1fr;
-            grid-gap: 10px;
+            grid-template-columns: 1fr 5fr 3em max-content 1fr;
         }
 
         .search-input {
