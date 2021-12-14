@@ -1,7 +1,6 @@
 package web
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"html/template"
@@ -56,19 +55,6 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	page = strconv.FormatInt(i, 10)
 	link := "./s?q=" + query + "&type=" + atype + "&page=" + page
 	pase(w, r, query, link, "", "")
-}
-
-func init() {
-	w := &bytes.Buffer{}
-	type Title struct {
-		Title       string
-		Description string
-	}
-	err := t.ExecuteTemplate(w, "index", Title{Title: "CurseForge 搜索 - 搜索 CurseForge 上的东西并下载", Description: "搜索 CurseForge 上的东西并下载。"})
-	if err != nil {
-		panic(err)
-	}
-	index = w.Bytes()
 }
 
 var index []byte

@@ -17,32 +17,32 @@
         integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
         crossorigin="anonymous"></script>
     <script>
-        window.onload = function(){
+        window.addEventListener('load', () => {
             let darkMode = localStorage.getItem("theme")
-            if (darkMode === "dark") enableDarkMode()
-        }
-        
+            if (darkMode === "dark") {
+                enableDarkMode()
+            }
+        });
+
         function toggleDarkMode() {
             darkMode = localStorage.getItem("theme")
             if (darkMode === "dark") {
-            disableDarkMode()
+                disableDarkMode()
             } else {
-            enableDarkMode()
+                enableDarkMode()
             }
         }
-    
+
         function enableDarkMode() {
-            document.body.classList.toggle("mdui-theme-layout-dark")
+            document.body.classList.add("mdui-theme-layout-dark")
             localStorage.setItem("theme", "dark")
         }
-    
+
         function disableDarkMode() {
-            document.body.classList.toggle("mdui-theme-layout-dark")
+            document.body.classList.remove("mdui-theme-layout-dark")
             localStorage.setItem("theme", "light")
         }
-        window
-        .matchMedia("(prefers-color-scheme: dark)")
-        .addListener(e => (e.matches ? enableDarkMode() : disableDarkMode()))
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", e => (e.matches ? enableDarkMode() : disableDarkMode()))
     </script>
     <style type="text/css">
         footer {
