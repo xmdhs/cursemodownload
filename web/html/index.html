@@ -3,9 +3,11 @@
 <html>
 {{template "head" .}}
 
-<body class="mdui-theme-accent-red mdui-theme-primary-red" style="padding-top: 80px">
-<br />
+<body class="mdui-theme-accent-red mdui-theme-primary-red mdui-theme-layout-light" style="padding-top: 80px">
 <div class="mdui-container px-3 my-5">
+  <button class="mdui-fab mdui-ripple mdui-fab-fixed" onclick="toggleDarkMode()">
+    <i class="mdui-icon material-icons">brightness_4</i>
+  </button>
 <p class="mdui-text-center"><font size="6"><a href="/curseforge" style="text-decoration: none; color: #000;"><b>CurseForge</b> 搜索</a></font>
 {{template "search" .}}
 <br />

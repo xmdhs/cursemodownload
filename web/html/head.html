@@ -16,6 +16,34 @@
     <script src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
         integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
         crossorigin="anonymous"></script>
+    <script>
+        window.onload = function(){
+            let darkMode = localStorage.getItem("theme")
+            if (darkMode === "dark") enableDarkMode()
+        }
+        
+        function toggleDarkMode() {
+            darkMode = localStorage.getItem("theme")
+            if (darkMode === "dark") {
+            disableDarkMode()
+            } else {
+            enableDarkMode()
+            }
+        }
+    
+        function enableDarkMode() {
+            document.body.classList.toggle("mdui-theme-layout-dark")
+            localStorage.setItem("theme", "dark")
+        }
+    
+        function disableDarkMode() {
+            document.body.classList.toggle("mdui-theme-layout-dark")
+            localStorage.setItem("theme", "light")
+        }
+        window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addListener(e => (e.matches ? enableDarkMode() : disableDarkMode()))
+    </script>
     <style type="text/css">
         footer {
             text-align: center;
