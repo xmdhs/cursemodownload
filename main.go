@@ -1,12 +1,15 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"time"
+	_ "unsafe"
 
 	"github.com/pkg/browser"
+	_ "github.com/xmdhs/cursemodownload/curseapi"
 	"github.com/xmdhs/cursemodownload/web"
 )
 
@@ -26,4 +29,16 @@ func main() {
 	fmt.Println("WebServer Starting...")
 	browser.OpenURL("http://127.0.0.1:8082/curseforge")
 	log.Println(s.ListenAndServe())
+}
+
+var apiaddr string
+
+//go:linkname api github.com/xmdhs/cursemodownload/curseapi.api
+var api string
+
+func init() {
+	flag.StringVar(&apiaddr, "apiaddr", "https://addons-ecs.forgesvc.net", "api address")
+	flag.Parse()
+
+	api = apiaddr
 }

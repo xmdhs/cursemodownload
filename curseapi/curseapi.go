@@ -10,8 +10,10 @@ import (
 
 //From https://gaz492.github.io/TwitchAPI/
 
+var api = `https://addons-ecs.forgesvc.net`
+
 func Searchmod(key string, index string, sectionId int) ([]Modinfo, error) {
-	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&sectionId=` + strconv.Itoa(sectionId) + `&sort=0`
+	aurl := api + `/api/v2/addon/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&sectionId=` + strconv.Itoa(sectionId) + `&sort=0`
 	b, err := httpcache(aurl, acache)
 	if err != nil {
 		return nil, fmt.Errorf("Searchmod: %w", err)
@@ -25,7 +27,7 @@ func Searchmod(key string, index string, sectionId int) ([]Modinfo, error) {
 }
 
 func FileId2downloadlink(id string) (string, error) {
-	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/0/file/` + id + `/download-url`
+	aurl := api + `/api/v2/addon/0/file/` + id + `/download-url`
 	b, err := httpcache(aurl, acache)
 	if err != nil {
 		return "", fmt.Errorf("FileId2downloadlink: %w", err)
@@ -36,7 +38,7 @@ func FileId2downloadlink(id string) (string, error) {
 //https://media.forgecdn.net/files/3046/220/jei-1.16.2-7.3.2.25.jar
 
 func AddonInfo(addonID string) (Modinfo, error) {
-	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/` + addonID
+	aurl := api + `/api/v2/addon/` + addonID
 	b, err := httpcache(aurl, acache)
 	if err != nil {
 		return Modinfo{}, fmt.Errorf("AddonInfo: %w", err)
@@ -54,7 +56,7 @@ func AddonInfo(addonID string) (Modinfo, error) {
 }
 
 func Addonfiles(addonID string) ([]Files, error) {
-	aurl := `https://addons-ecs.forgesvc.net/api/v2/addon/` + addonID + `/files`
+	aurl := api + `/api/v2/addon/` + addonID + `/files`
 	b, err := httpcache(aurl, acache)
 	if err != nil {
 		return nil, fmt.Errorf("Addonfiles: %w", err)
