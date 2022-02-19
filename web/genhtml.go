@@ -7,17 +7,27 @@ import (
 	"net/http"
 )
 
-type results struct {
-	Name        string
-	Title       string
-	List        []resultslist
-	Link        string
-	T           bool
-	WebsiteURL  string
+type historyS struct {
+	Name             string
+	Version          string
+	WebsiteURL       string
+	VersionsListLink string
+	Tr               []string
+	List             []resultslist
+	headS
+}
+
+type headS struct {
 	Description string
-	Table       bool
-	Script      template.HTML
-	Tr          []string
+	Title       string
+}
+
+type pageS struct {
+	headS
+	Name       string
+	List       []resultslist
+	WebsiteURL string
+	Link       string
 }
 
 type resultslist struct {
@@ -27,39 +37,23 @@ type resultslist struct {
 	TdList []template.HTML
 }
 
-func tablepase(w http.ResponseWriter, list []resultslist, Name, nextlink, titilelink, Description string, script template.HTML, tr []string) {
-	T := true
-	if len(list) != 20 || nextlink == "" {
-		T = false
-	}
-	Table := false
-	for _, v := range list {
-		if len(v.TdList) > 0 {
-			Table = true
-			break
-		}
-	}
-	r := results{
-		Title:       Name + " - CurseForge mod",
-		Name:        Name,
-		Link:        nextlink,
-		List:        list,
-		WebsiteURL:  titilelink,
-		T:           T,
-		Description: Description,
-		Table:       Table,
-		Script:      script,
-		Tr:          tr,
-	}
-	err := t.ExecuteTemplate(w, "page", r)
+func (h *historyS) parse(w http.ResponseWriter) {
+	h.Title += " - CurseForge mod"
+	err := t.ExecuteTemplate(w, "history", h)
 	if err != nil {
 		log.Println(err)
-		return
 	}
 }
 
-func pase(w http.ResponseWriter, list []resultslist, Name, nextlink, titilelink, Description string) {
-	tablepase(w, list, Name, nextlink, titilelink, Description, "", nil)
+func (p *pageS) parse(w http.ResponseWriter, nextlink string) {
+	if len(p.List) == 20 || nextlink != "" {
+		p.Link = nextlink
+	}
+	p.Title += " - CurseForge mod"
+	err := t.ExecuteTemplate(w, "page", p)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 var t *template.Template

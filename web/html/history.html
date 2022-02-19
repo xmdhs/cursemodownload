@@ -1,0 +1,74 @@
+{{define "history"}}
+<!DOCTYPE html>
+<html>
+{{template "head" .}}
+
+<body class="mdui-theme-accent-red mdui-theme-primary-red" style="padding-top: 20px">
+    <div class="mdui-container px-3 my-5">
+        <p class="mdui-text-center"><a href="/curseforge" style="text-decoration: none;font-size: xx-large;"
+                class="mdui-text-color-theme-text"><b>CurseForge</b> 搜索</a></p>
+        <h1 class="mdui-typo"><a href="{{ .WebsiteURL}}" target="_blank" rel="noopener noreferrer">{{.Name}}</a></h1>
+        <div style="padding-bottom: 15px;">
+            <a href="/curseforge" style="color: black;text-decoration: none">
+                <div class="mdui-chip">
+                    <span class="mdui-chip-title">Home</span>
+                </div>
+            </a>
+            <i class="mdui-icon material-icons">&#xe5cc;</i>
+            <a href="{{ .VersionsListLink }}" style="color: black;text-decoration: none">
+                <div class="mdui-chip">
+                    <span class="mdui-chip-title">Versions List</span>
+                </div>
+            </a>
+            <i class="mdui-icon material-icons">&#xe5cc;</i>
+            <div class="mdui-chip">
+                <span class="mdui-chip-title">{{.Version}}</span>
+            </div>
+        </div>
+        <div class="mdui-table-fluid">
+            <table class="mdui-table mdui-table-hoverable mdui-typo">
+                <tbody id="tb">
+                    <tr>
+                        {{range .Tr}}<th>{{.}}</th>{{end}}
+                    </tr>
+                    {{range .List}}<tr>
+                        {{range .TdList}}<td>{{.}}</td>{{end}}
+                    </tr>{{end}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let dom = document.querySelectorAll("#tb > tr > td:nth-child(3)")
+        for (const v of dom) {
+            let atime = v.textContent
+            v.textContent = transformTime(atime)
+        }
+        function transformTime(timestamp) {
+            if (typeof timestamp == "string") {
+                if (!isNaN(new Number(timestamp))) {
+                    var time = new Date(timestamp * 1000);
+                    var y = time.getFullYear();
+                    var M = time.getMonth() + 1;
+                    var d = time.getDate();
+                    var h = time.getHours();
+                    var m = time.getMinutes();
+                    return y + '-' + addZero(M) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(m)
+                } else {
+                    return timestamp
+                }
+            } else {
+                return '';
+            }
+        }
+        function addZero(m) {
+            return m < 10 ? '0' + m : m;
+        }
+    </script>
+    {{template "footer" .}}
+
+</body>
+
+</html>
+{{end}}

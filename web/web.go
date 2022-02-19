@@ -54,7 +54,17 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 	i++
 	page = strconv.FormatInt(i, 10)
 	link := "./s?q=" + query + "&type=" + atype + "&page=" + page
-	pase(w, r, query, link, "", "")
+
+	p := pageS{
+		headS: headS{
+			Description: "",
+			Title:       query,
+		},
+		Name: query,
+		List: r,
+		Link: "",
+	}
+	p.parse(w, link)
 }
 
 var index []byte
@@ -140,7 +150,17 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		}
 	}
 
-	pase(w, r, title, "", c.WebsiteUrl, c.Name+" - "+c.Summary+" - files download "+vers.String())
+	p := pageS{
+		headS: headS{
+			Description: c.Name + " - " + c.Summary + " - files download " + vers.String(),
+			Title:       title,
+		},
+		Name:       c.Name,
+		List:       r,
+		Link:       "",
+		WebsiteURL: c.WebsiteUrl,
+	}
+	p.parse(w, "")
 }
 
 func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
@@ -214,38 +234,22 @@ func History(w http.ResponseWriter, req *http.Request) {
 			TdList: tdlist,
 		})
 	}
-	tablepase(w, r, info.Name+" "+ver, "", info.WebsiteUrl, info.Name+" - "+ver+" - "+info.Summary+" - files download", template.HTML(timeJs), tdname)
+	hs := historyS{
+		Name:             info.Name,
+		Version:          ver,
+		WebsiteURL:       info.WebsiteUrl,
+		VersionsListLink: "/curseforge/info?id=" + id,
+		Tr:               tdname,
+		List:             r,
+		headS: headS{
+			Description: info.Name + " - " + ver + " - " + info.Summary + " - files download",
+			Title:       info.Name + " - " + ver,
+		},
+	}
+	hs.parse(w)
 }
 
 var tdname = []string{"File Name", "Release Type", "File Date", "Dependencies"}
-
-const timeJs = `<script>
-let dom = document.querySelectorAll("#tb > tr > td:nth-child(3)")
-for (const v of dom) {
-	let atime = v.textContent
-	v.textContent = transformTime(atime)
-}
-function transformTime(timestamp) {
-	if (typeof timestamp == "string") {
-		if (!isNaN(new Number(timestamp))) {
-			var time = new Date(timestamp * 1000);
-			var y = time.getFullYear();
-			var M = time.getMonth() + 1;
-			var d = time.getDate();
-			var h = time.getHours();
-			var m = time.getMinutes();
-			return y + '-' + addZero(M) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(m)
-		} else {
-			return timestamp
-		}
-	} else {
-		return '';
-	}
-}
-function addZero(m) {
-		return m < 10 ? '0' + m : m;
-}
-</script>`
 
 var releaseType = map[int]string{
 	1: "Release",
