@@ -10,7 +10,7 @@ import (
 
 //From https://gaz492.github.io/TwitchAPI/
 
-var api = `https://addons-ecs.forgesvc.net`
+const api = `https://auto.xmdhs.com/curse`
 
 func Searchmod(key string, index string, sectionId int) ([]Modinfo, error) {
 	aurl := api + `/api/v2/addon/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&sectionId=` + strconv.Itoa(sectionId) + `&sort=0`
