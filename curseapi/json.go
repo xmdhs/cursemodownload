@@ -45,6 +45,6 @@ type Files struct {
 }
 
 type Dependencies struct {
-	AddonId int `json:"addonId"`
-	Type    int `json:"type"`
+	AddonId int `json:"modId"`
+	Type    int `json:"relationType"`
 }
