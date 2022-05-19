@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"golang.org/x/sync/singleflight"
@@ -13,9 +14,7 @@ import (
 
 var c = http.Client{Timeout: 10 * time.Second}
 
-//var key = os.Getenv("CURSE_API_KEY")
-
-var key = "$2a$10$Xewj1tf0GSQin8A4vkTXdOKTwCx6J.1ZDVzliKYBdN8CcF2GrzSsu"
+var key = os.Getenv("CURSE_API_KEY")
 
 func httpget(url string) ([]byte, error) {
 	reqs, err := http.NewRequest("GET", url, nil)
