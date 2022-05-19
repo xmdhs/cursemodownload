@@ -6,12 +6,15 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"golang.org/x/sync/singleflight"
 )
 
 var c = http.Client{Timeout: 10 * time.Second}
+
+var key = os.Getenv("CURSE_API_KEY")
 
 func httpget(url string) ([]byte, error) {
 	reqs, err := http.NewRequest("GET", url, nil)
@@ -20,6 +23,7 @@ func httpget(url string) ([]byte, error) {
 	}
 	reqs.Header.Set("Accept", "*/*")
 	reqs.Header.Set("Accept-Encoding", "gzip")
+	reqs.Header.Set("x-api-key", key)
 	reqs.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36")
 	rep, err := c.Do(reqs)
 	if rep != nil {
