@@ -194,7 +194,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 		}
 		ch <- info
 	}()
-	h, err := curseapi.Addonfiles(id)
+	h, err := curseapi.Addonfiles(id, ver)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

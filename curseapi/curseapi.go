@@ -53,8 +53,8 @@ func AddonInfo(addonID string) (Modinfo, error) {
 	return m, nil
 }
 
-func Addonfiles(addonID string) ([]Files, error) {
-	aurl := api + `/mods/` + addonID + `/files`
+func Addonfiles(addonID, gameVersion string) ([]Files, error) {
+	aurl := api + `/mods/` + addonID + `/files?pageSize=10000&gameVersion=` + gameVersion
 	b, err := httpcache(aurl, acache)
 	if err != nil {
 		return nil, fmt.Errorf("Addonfiles: %w", err)
