@@ -13,7 +13,7 @@ import (
 const api = `https://api.curseforge.com/v1`
 
 func Searchmod(key string, index string, sectionId int) ([]Modinfo, error) {
-	aurl := api + `/mods/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&sectionId=` + strconv.Itoa(sectionId) + `&sort=0`
+	aurl := api + `/mods/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&classId=` + strconv.Itoa(sectionId) + `&sortField=2&sortOrder=desc`
 	b, err := httpcache(aurl, acache)
 	if err != nil {
 		return nil, fmt.Errorf("Searchmod: %w", err)
@@ -43,15 +43,13 @@ func AddonInfo(addonID string) (Modinfo, error) {
 	if err != nil {
 		return Modinfo{}, fmt.Errorf("AddonInfo: %w", err)
 	}
-	m := Modinfo{}
-	err = json.Unmarshal(b, &m)
+	d := apidata[Modinfo]{}
+	err = json.Unmarshal(b, &d)
+	m := d.Data
 	if err != nil {
 		acache.Delete(aurl)
 		return Modinfo{}, fmt.Errorf("AddonInfo: %w", err)
 	}
-	sort.Slice(m.GameVersionLatestFiles, func(i, j int) bool {
-		return m.GameVersionLatestFiles[i].ProjectFileId > m.GameVersionLatestFiles[j].ProjectFileId
-	})
 	return m, nil
 }
 
@@ -61,8 +59,9 @@ func Addonfiles(addonID string) ([]Files, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Addonfiles: %w", err)
 	}
-	m := make([]Files, 0)
-	err = json.Unmarshal(b, &m)
+	d := apidata[[]Files]{}
+	err = json.Unmarshal(b, &d)
+	m := d.Data
 	if err != nil {
 		acache.Delete(aurl)
 		return nil, fmt.Errorf("Addonfiles: %w", err)

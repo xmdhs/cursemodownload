@@ -158,7 +158,7 @@ func Info(w http.ResponseWriter, req *http.Request) {
 		Name:       c.Name,
 		List:       r,
 		Link:       "",
-		WebsiteURL: c.WebsiteUrl,
+		WebsiteURL: c.Links.WebsiteUrl,
 	}
 	p.parse(w, "")
 }
@@ -217,7 +217,11 @@ func History(w http.ResponseWriter, req *http.Request) {
 	r := make([]resultslist, 0)
 	for _, v := range files {
 		tdlist := make([]template.HTML, 0)
-		tdlist = append(tdlist, template.HTML(`<a href="`+template.HTMLEscapeString(v.DownloadUrl)+`" target="_blank">`+template.HTMLEscapeString(v.FileName)+`</a>`))
+		if v.DownloadUrl == "" {
+			tdlist = append(tdlist, template.HTML(template.HTMLEscapeString(v.FileName+" (can not get download link)")))
+		} else {
+			tdlist = append(tdlist, template.HTML(`<a href="`+template.HTMLEscapeString(v.DownloadUrl)+`" target="_blank">`+template.HTMLEscapeString(v.FileName)+`</a>`))
+		}
 		tdlist = append(tdlist, template.HTML(template.HTMLEscapeString(releaseType[v.ReleaseType])))
 		atime, err := time.Parse(time.RFC3339, v.FileDate)
 		if err != nil {
@@ -237,7 +241,7 @@ func History(w http.ResponseWriter, req *http.Request) {
 	hs := historyS{
 		Name:             info.Name,
 		Version:          ver,
-		WebsiteURL:       info.WebsiteUrl,
+		WebsiteURL:       info.Links.WebsiteUrl,
 		VersionsListLink: "/curseforge/info?id=" + id,
 		Tr:               tdname,
 		List:             r,
