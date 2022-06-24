@@ -36,6 +36,13 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+	query = strings.TrimSpace(query)
+	_, err := strconv.Atoi(query)
+	if err == nil {
+		http.Redirect(w, req, "./info?id="+query, http.StatusMovedPermanently)
+		return
+	}
+
 	i, err := strconv.ParseInt(page, 10, 64)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
