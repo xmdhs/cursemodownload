@@ -1,2 +1,2 @@
 # cursemodownload
-Use CurseForge API to get download link of mod, this tool have not repost any file.
+This tool uses the CurseForge API to retrieve mod download links without rehosting any files.
