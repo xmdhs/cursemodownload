@@ -31,7 +31,7 @@
                     <tr>
                         {{range .Tr}}<th>{{.}}</th>{{end}}
                     </tr>
-                    {{range .List}}<tr>
+                    {{range .List}}<tr class="c">
                         {{range .TdList}}<td>{{.}}</td>{{end}}
                     </tr>{{end}}
                 </tbody>
@@ -48,13 +48,8 @@
         function transformTime(timestamp) {
             if (typeof timestamp == "string") {
                 if (!isNaN(new Number(timestamp))) {
-                    var time = new Date(timestamp * 1000);
-                    var y = time.getFullYear();
-                    var M = time.getMonth() + 1;
-                    var d = time.getDate();
-                    var h = time.getHours();
-                    var m = time.getMinutes();
-                    return y + '-' + addZero(M) + '-' + addZero(d) + ' ' + addZero(h) + ':' + addZero(m)
+                    const time = new Date(timestamp * 1000);
+                    return time.toLocaleString()
                 } else {
                     return timestamp
                 }
@@ -65,6 +60,12 @@
         function addZero(m) {
             return m < 10 ? '0' + m : m;
         }
+
+        document.querySelectorAll(".c").forEach(v => {
+            v.addEventListener('click', () => {
+                v.querySelector("a")?.click()
+            })
+        })
     </script>
     {{template "footer" .}}
 
