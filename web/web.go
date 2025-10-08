@@ -1,6 +1,7 @@
 package web
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"html/template"
@@ -21,6 +22,7 @@ var sectionIds = map[string]int{
 }
 
 func WebRoot(w http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
 	query := req.FormValue("q")
 	page := req.FormValue("page")
 	if page == "" {
@@ -49,7 +51,7 @@ func WebRoot(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 	page = strconv.FormatInt(i*20, 10)
-	r, err := search(query, page, sectionId)
+	r, err := search(ctx, query, page, sectionId)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -80,8 +82,8 @@ func Index(w http.ResponseWriter, req *http.Request) {
 	w.Write(index)
 }
 
-func search(txt, offset string, sectionId int) ([]resultslist, error) {
-	c, err := curseapi.Searchmod(txt, offset, sectionId)
+func search(ctx context.Context, txt, offset string, sectionId int) ([]resultslist, error) {
+	c, err := curseapi.Searchmod(ctx, txt, offset, sectionId)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +101,8 @@ func search(txt, offset string, sectionId int) ([]resultslist, error) {
 
 func Info(w http.ResponseWriter, req *http.Request) {
 	id := req.FormValue("id")
-	c, err := curseapi.AddonInfo(id)
+	ctx := req.Context()
+	c, err := curseapi.AddonInfo(ctx, id)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -171,13 +174,14 @@ func Info(w http.ResponseWriter, req *http.Request) {
 }
 
 func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
 	q := req.URL.Query()
 	id := q.Get("id")
 	if id == "" {
 		http.Error(w, "", 500)
 		return
 	}
-	link, err := curseapi.FileId2downloadlink(id)
+	link, err := curseapi.FileId2downloadlink(ctx, id)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return
@@ -186,6 +190,7 @@ func Getdownloadlink(w http.ResponseWriter, req *http.Request) {
 }
 
 func History(w http.ResponseWriter, req *http.Request) {
+	ctx := req.Context()
 	q := req.URL.Query()
 	if len(q["id"]) == 0 || len(q["ver"]) == 0 {
 		http.Error(w, "", 500)
@@ -195,13 +200,13 @@ func History(w http.ResponseWriter, req *http.Request) {
 	ch := make(chan curseapi.Modinfo, 10)
 	errCh := make(chan error, 10)
 	go func() {
-		info, err := curseapi.AddonInfo(id)
+		info, err := curseapi.AddonInfo(ctx, id)
 		if err != nil {
 			errCh <- err
 		}
 		ch <- info
 	}()
-	h, err := curseapi.Addonfiles(id, ver)
+	h, err := curseapi.Addonfiles(ctx, id, ver)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 		return

@@ -1,19 +1,30 @@
-{{define "head"}}
+{{-define "head"-}}
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    {{if .Description}}
-    <meta name="description" content="{{.Description}}">{{end}}
-    <title>{{.Title}}</title>
+    {{-if .Description-}}
+    <meta name="description" content="{{-.Description-}}">{{-end-}}
+    <title>{{-.Title-}}</title>
     <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "b288002c53e544a38e68d4ec672b85e8"}'></script>
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+        data-cf-beacon='{"token": "b288002c53e544a38e68d4ec672b85e8"}'></script>
     <!-- End Cloudflare Web Analytics -->
     <!-- MDUI CSS -->
-    <link rel="stylesheet" href="https://static.xmdhs.com/mdui/1.0.2/css/mdui.min.css"/>
+    <link rel="stylesheet" href="https://static.xmdhs.com/mdui/1.0.2/css/mdui.min.css" />
     <!-- MDUI JavaScript -->
     <script src="https://static.xmdhs.com/mdui/1.0.2/js/mdui.min.js"></script>
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-5DQNJQ55');</script>
+    <!-- End Google Tag Manager -->
     <script>
         window.addEventListener('load', () => {
             let darkMode = localStorage.getItem("theme")
@@ -48,11 +59,11 @@
         }
     </style>
     <script type="text/javascript">
-        (function(c,l,a,r,i,t,y){
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-        })(window, document, "clarity", "script", "qcpyvk2tvf");
+            (function (c, l, a, r, i, t, y) {
+                c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
+                t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
+                y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
+            })(window, document, "clarity", "script", "qcpyvk2tvf");
     </script>
 </head>
-{{end}}
+{{-end-}}

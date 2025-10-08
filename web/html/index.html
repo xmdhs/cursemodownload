@@ -1,7 +1,7 @@
-{{define "index"}}
+{{-define "index"-}}
 <!DOCTYPE html>
 <html>
-{{template "head" .}}
+{{-template "head" .-}}
 
 <body class="mdui-theme-accent-red mdui-theme-primary-red mdui-theme-layout-light" style="padding-top: 80px">
   <div class="mdui-container px-3 my-5">
@@ -10,11 +10,11 @@
     </button>
     <p class="mdui-text-center"><a href="/curseforge" style="text-decoration: none;font-size: xx-large;"
         class="mdui-text-color-theme-text"><b>CurseForge</b> 搜索</a></p>
-      {{template "search" .}}
+      {{-template "search" .-}}
       <br />
   </div>
-  {{template "footer" .}}
+  {{-template "footer" .-}}
 </body>
 
 </html>
-{{end}}
+{{-end-}}
