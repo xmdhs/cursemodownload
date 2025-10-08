@@ -1,12 +1,12 @@
-{{-define "head"-}}
+{{- define "head" -}}
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    {{-if .Description-}}
-    <meta name="description" content="{{-.Description-}}">{{-end-}}
-    <title>{{-.Title-}}</title>
+    {{- if .Description -}}
+    <meta name="description" content="{{- .Description -}}">{{- end -}}
+    <title>{{- .Title -}}</title>
     <!-- Cloudflare Web Analytics -->
     <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
         data-cf-beacon='{"token": "b288002c53e544a38e68d4ec672b85e8"}'></script>
@@ -66,4 +66,4 @@
             })(window, document, "clarity", "script", "qcpyvk2tvf");
     </script>
 </head>
-{{-end-}}
+{{- end -}}
