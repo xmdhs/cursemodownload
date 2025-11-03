@@ -62,7 +62,8 @@
         }
 
         document.querySelectorAll(".c").forEach(v => {
-            v.addEventListener('click', () => {
+            v.addEventListener('click', a => {
+                if (a?.target?.tagName == "A") return;
                 v.querySelector("a")?.click()
             })
         })
