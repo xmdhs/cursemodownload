@@ -14,7 +14,7 @@ import (
 const api = `https://api.curseforge.com/v1`
 
 func Searchmod(ctx context.Context, key string, index string, sectionId int) ([]Modinfo, error) {
-	aurl := api + `/mods/search?categoryId=0&gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&classId=` + strconv.Itoa(sectionId) + `&sortField=2&sortOrder=desc`
+	aurl := api + `/mods/search?gameId=432&index=` + index + `&pageSize=20&searchFilter=` + url.QueryEscape(key) + `&classId=` + strconv.Itoa(sectionId) + `&sortField=2&sortOrder=desc`
 	b, err := httpcache(ctx, aurl, acache)
 	if err != nil {
 		return nil, fmt.Errorf("Searchmod: %w", err)
